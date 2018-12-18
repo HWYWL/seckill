@@ -1,5 +1,6 @@
 package com.yi.seckill.controller;
 
+import cn.hutool.core.util.RandomUtil;
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.model.UserInfo;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户
  * @author YI
@@ -21,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController{
     @Autowired
     UserService userService;
+
+    @Autowired
+    HttpServletRequest httpServletRequest;
 
     /**
      * 获取用户基本信息
@@ -52,5 +58,43 @@ public class UserController extends BaseController{
         }
 
         return MessageResult.ok(userModel);
+    }
+
+    /**
+     * 获取用户otp短信接口
+     * @param telphone 手机号码
+     * @return
+     */
+    @RequestMapping(value = "getotp", method = RequestMethod.POST)
+    public MessageResult getotp(String telphone) {
+        // 随机验证码
+        String otpCode = RandomUtil.randomNumbers(6);
+
+        // 因为没使用redis，这里采用httpsession的方式绑定手机号码和otpcode
+        httpServletRequest.getSession().setAttribute(telphone, otpCode);
+
+        // 将otpCode发送给用户
+        System.out.println("telphone:" + telphone + " =====> " + "optCode:" + otpCode);
+
+        return MessageResult.ok();
+    }
+
+    /**
+     * 获取用户otp短信接口
+     * @param telphone 手机号码
+     * @return
+     */
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    public MessageResult register(String telphone) {
+        // 随机验证码
+        String otpCode = RandomUtil.randomNumbers(6);
+
+        // 因为没使用redis，这里采用httpsession的方式绑定手机号码和otpcode
+        httpServletRequest.getSession().setAttribute(telphone, otpCode);
+
+        // 将otpCode发送给用户
+        System.out.println("telphone:" + telphone + " =====> " + "optCode:" + otpCode);
+
+        return MessageResult.ok();
     }
 }
