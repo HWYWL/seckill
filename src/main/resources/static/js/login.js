@@ -170,7 +170,12 @@ $(function(){
 			            type: 'post',
 			            data: ldata,
 			            success:function(data){
-			                if (data.code == '0') {
+                            if(data.code == '-1'){
+                                $(".log-btn").off('click').addClass("off");
+                                $('.num-err').removeClass('hide').find('em').text(data.data.errMsg);
+                                $('.num-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
+                                return false;
+                            } else if (data.code == '0') {
                                 layer.msg(data.msg,{icon:1});
                                 setTimeout(function () {
                                     window.location.href = "/index";
@@ -193,11 +198,6 @@ $(function(){
 			                    	$(this).attr('src', '/user/verifyCode?'+Math.random());
 			                    });
 			                    return false;
-			                } else if(data.code == '1'){
-			                	$(".log-btn").off('click').addClass("off");
-			                	$('.num-err').removeClass('hide').find('em').text(data.msg);
-			                	$('.num-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
-			                	return false;
 			                }
 			            },
 			            error:function(){
@@ -224,13 +224,9 @@ $(function(){
                                 setTimeout(function () {
                                     window.location.href = "/index";
                                 }, 2000);
-			                } else if(data.code == '1') {
+			                } else if(data.code == '-1') {
 			                	$(".log-btn").off('click').addClass("off");
-			                    $('.num2-err').removeClass('hide').text(data.msg);
-			                    return false;
-			                } else if(data.code == '2') {
-			                	$(".log-btn").off('click').addClass("off");
-			                    $('.error').removeClass('hide').text(data.msg);
+			                    $('.num2-err').removeClass('hide').text(data.data.errMsg);
 			                    return false;
 			                }
 			            },

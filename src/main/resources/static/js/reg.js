@@ -147,11 +147,11 @@ $(function(){
 		var code = $.trim($('#veri-code').val());
 		if (checkcode(code)) {
 			$.ajax({
-		            url: '/cpcode',
+		            url: '/user/cpcode',
 		            type: 'post',
 		            dataType: 'json',
 		            async: false,
-		            data: {phone:phone,code:code,type:"reg"},
+		            data: {telphone:phone,code:code},
 		            success:function(data){
 		                if (data.code == '0') {
 		                	cstatus = true;
@@ -190,24 +190,21 @@ $(function(){
 		var phone = $.trim($('#tel').val());
 		if (pstatus) {
 			var code = $.trim($('#veri-code').val());
+			var name = $.trim($('#name').val());
+			var gender = $.trim($('#gender').val());
+			var age = $.trim($('#age').val());
 			if (cstatus) {
 				var passport = $.trim($('#passport').val());
 				var passport2 = $.trim($('#passport2').val());
 				var ag = $("input[name='agree']").val();
 				if (checkpassport(passport) && checkpassport2(passport2) && checkagree(ag)) {
 					$.ajax({
-			            url: '/doreg',
+			            url: '/user/register',
 			            type: 'post',
-			            dataType: 'json',
-			            async: false,
-			            data: {phone:phone,code:code,password:passport,passwordcp:passport2},
+			            data: {telphone:phone,otpCode:code,password:passport,passwordcp:passport2,registerMode:'phone',name:name,gender:gender,age:age},
 			            success:function(data){
 			                if (data.code == '0') {
-			                	// $('.tel-err').addClass('hide');
-			                	// $('.pwd-err').addClass('hide');
-			                	// $('.confirmpwd-err').addClass('hide');
-			                	// $('.error').addClass('hide');
-			                    globalTip({'msg':'恭喜您，注册成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
+			                    globalTip({'msg':'恭喜您，注册成功!','setTime':3,'jump':true,'URL':'/login'});
 			                } else if(data.code == '1'){
 								// $('.tel-err').removeClass('hide').text(data.msg);
 								$('.tel-err').removeClass('hide').find("em").text(data.msg);
@@ -260,11 +257,9 @@ $(function(){
 			}
 			if (pstatus) {
 				$.ajax({
-		            url: '/getcode',
+		            url: '/user/getotp',
 		            type: 'post',
-		            dataType: 'json',
-		            async: true,
-		            data: {phone:phone,type:"reg",note:note,code:code},
+		            data: {telphone:phone},
 		            success:function(data){
 		                if (data.code == '0') {
 		                    var oTime = $(".form-data .time"),

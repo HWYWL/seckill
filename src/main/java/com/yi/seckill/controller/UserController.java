@@ -2,8 +2,10 @@ package com.yi.seckill.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.common.EmLoginType;
@@ -36,38 +38,6 @@ public class UserController extends BaseController{
     HttpServletRequest httpServletRequest;
 
     /**
-     * 获取用户基本信息
-     * @param id 用户id
-     * @return
-     */
-    @RequestMapping(value = "userInfo", method = RequestMethod.POST)
-    public MessageResult userInfo(Integer id) throws Exception {
-        UserInfo userInfo = userService.selectById(id);
-
-        if (userInfo == null){
-            throw new Exception("用户不存在");
-        }
-
-        return MessageResult.ok(userInfo);
-    }
-
-    /**
-     * 获取用户基本信息，包含密码
-     * @param id 用户id
-     * @return
-     */
-    @RequestMapping(value = "userModel", method = RequestMethod.POST)
-    public MessageResult userModel(Integer id) throws BusinessException {
-        UserModel userModel = userService.selectByPrimaryAllId(id);
-
-        if (userModel == null){
-            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
-        }
-
-        return MessageResult.ok(userModel);
-    }
-
-    /**
      * 获取用户otp短信接口
      * @param telphone 手机号码
      * @return
@@ -82,6 +52,24 @@ public class UserController extends BaseController{
 
         // 将otpCode发送给用户
         System.out.println("telphone:" + telphone + " =====> " + "optCode:" + otpCode);
+
+        return MessageResult.ok();
+    }
+
+    /**
+     * 验证验证码是否正确
+     * @param telphone 手机号码
+     * @param code 验证码
+     * @return
+     */
+    @RequestMapping(value = "cpcode", method = RequestMethod.POST)
+    public MessageResult cpcode(@RequestParam(name = "telphone") String telphone, @RequestParam(name = "code")String code) throws BusinessException {
+        // 获取session中的验证码
+        String inSessionOtpCode = (String)httpServletRequest.getSession().getAttribute(telphone);
+
+        if (!StrUtil.equals(code, inSessionOtpCode)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "验证码错误！！！");
+        }
 
         return MessageResult.ok();
     }
@@ -106,17 +94,40 @@ public class UserController extends BaseController{
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public MessageResult register(@RequestParam(name = "telphone") String telphone,
                                   @RequestParam(name = "otpCode") String otpCode,
+                                  @RequestParam(name = "password") String password,
+                                  @RequestParam(name = "passwordcp") String passwordcp,
+                                  @RequestParam(name = "registerMode") String registerMode,
                                   @RequestParam(name = "name") String name,
                                   @RequestParam(name = "gender") Integer gender,
                                   @RequestParam(name = "age") Integer age) throws BusinessException {
 
         // 获取存取session中的otpCode
-        String inSessionOtpCode = (String)this.httpServletRequest.getSession().getAttribute("telphone");
+        String inSessionOtpCode = (String)this.httpServletRequest.getSession().getAttribute(telphone);
 
         // 判断验证码是否相同
         if (!StrUtil.equals(inSessionOtpCode, otpCode)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "验证码错误！！！");
         }
+
+        // 判断两次输入密码是否相同
+        if (!StrUtil.equals(password, passwordcp)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "两次输入的密码不一致！！！");
+        }
+
+        // 判断两次输入密码是否相同
+        if (StrUtil.isEmpty(name) || gender == null || age == null){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "参数不能为空！！！");
+        }
+
+        UserModel userModel = new UserModel();
+        userModel.setTelphone(telphone);
+        userModel.setEncrptPassword(SecureUtil.md5(password));
+        userModel.setAge(age);
+        userModel.setGender(gender.byteValue());
+        userModel.setName(name);
+        userModel.setRegisterMode(registerMode);
+
+        userService.insertSelective(userModel);
 
         return MessageResult.ok();
     }
@@ -155,15 +166,46 @@ public class UserController extends BaseController{
     public MessageResult login(@RequestParam(name = "telphone") String telphone,
                                   @RequestParam(name = "otpCode") String otpCode,
                                   @RequestParam(name = "password") String password,
-                                  @RequestParam(name = "type") Integer type) {
+                                  @RequestParam(name = "type") Integer type) throws BusinessException {
 
-    // 手机号或者用户名登录
-    if (type != null && type.intValue() == EmLoginType.USERNAME_PHONE_PASSWORD.getTypeCode()){
-
-    }else if (type != null && type.intValue() == EmLoginType.PHONE_OTP.getTypeCode()){
-        // 验证码登录
+    if (StrUtil.isEmpty(telphone) || type == null){
+        throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
     }
 
-        return MessageResult.ok();
+    if (type == EmLoginType.USERNAME_PHONE_PASSWORD.getTypeCode() && StrUtil.isEmpty(password)){
+        throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "密码不能为空");
+    }
+
+    if (type == EmLoginType.PHONE_OTP.getTypeCode() && StrUtil.isEmpty(otpCode)){
+        throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "验证码不能为空");
+    }
+
+    UserInfo userInfo = new UserInfo();
+    // 手机号+密码登录
+    if (type == EmLoginType.USERNAME_PHONE_PASSWORD.getTypeCode()){
+        UserModel userModel = userService.selectByPrimaryAllTelPhone(telphone);
+        // 用户不存在
+        if (userModel == null){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }else if (StrUtil.equals(userModel.getEncrptPassword(), password)){
+            BeanUtil.copyProperties(userModel, userInfo);
+        }else {
+            throw new BusinessException(EmBusinessError.USER_LOGIN_PASSWORD_ERROR);
+        }
+    }else if (type == EmLoginType.PHONE_OTP.getTypeCode()){
+        userInfo = userService.selectByTelPhone(telphone);
+        // 验证码登录
+        String inSessionOtpCode = (String)httpServletRequest.getSession().getAttribute(telphone);
+        // 用户不存在
+        if (userInfo == null){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }else if (StrUtil.equals(otpCode, inSessionOtpCode)){
+            System.out.println("登陆成功");
+        }else {
+            throw new BusinessException(EmBusinessError.OTP_CODE_NOT_EXIST);
+        }
+    }
+
+        return MessageResult.ok(userInfo);
     }
 }

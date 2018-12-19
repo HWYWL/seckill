@@ -1,5 +1,8 @@
 package com.yi.seckill.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -9,8 +12,10 @@ import java.io.Serializable;
  */
 public class UserPassword implements Serializable {
     /**
-     * 主键ID
+     * 主键ID,插入时返回主键
      */
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     /**

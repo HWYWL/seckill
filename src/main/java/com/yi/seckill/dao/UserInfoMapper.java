@@ -26,4 +26,12 @@ public interface UserInfoMapper extends Mapper<UserInfo> {
      */
     @Select("SELECT * FROM user_info AS e1 where e1.id = #{id};")
     UserInfo selectByPrimaryId(Integer id);
+
+    /**
+     * 根据用户手机号码查找数据,包含连表的密码
+     * @param telphone 用户手机号码
+     * @return
+     */
+    @Select("SELECT e1.*,e2.encrpt_password FROM user_info AS e1 INNER JOIN user_password AS e2 ON e1.telphone = #{telphone} and e1.id = e2.user_id;")
+    UserModel selectByPrimaryAllTelPhone(String telphone);
 }
