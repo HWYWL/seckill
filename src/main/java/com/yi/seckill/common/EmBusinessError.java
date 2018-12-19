@@ -9,7 +9,8 @@ public enum EmBusinessError implements CommonError {
     PARAMETER_VALIDATION_ERROR(10001, "参数不合法"),
     UNKONWN_ERROR(10002, "未知错误"),
 
-    USER_NOT_EXIST(20001, "用户不存在");
+    USER_NOT_EXIST(20001, "用户不存在"),
+    USER_IS_EXIST(20002, "用户已经存在");
 
     private int errCode;
     private String errMsg;

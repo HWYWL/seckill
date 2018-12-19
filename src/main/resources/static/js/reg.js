@@ -1,59 +1,309 @@
 $(function(){
+	// 全局，标识手机号状态
+	var pstatus = false;
 
-    function checkPhone(phone){
-        var status = true;
-        if (phone == '') {
-            $('.num2-err').removeClass('hide').find("em").text('请输入手机号');
-            return false;
-        }
-        var param = /^1[34578]\d{9}$/;
-        if (!param.test(phone)) {
-            $('.num2-err').removeClass('hide');
-            $('.num2-err').text('手机号不合法，请重新输入');
-            return false;
-        }
-        $.ajax({
-            url: '/user/getotp',
+	// 全局，标识验证码状态
+	var cstatus = false;
+
+	// 检测手机号是否可注册
+	function checkphone(phone){
+	 	// 输入是否为空
+		if (phone == '') {
+			$('.tel-err').removeClass('hide').find("em").text('请输入手机');
+ 			$('.tel-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			pstatus = false;
+			return false;
+		}
+		// 手机格式是否正确
+		var param = /^1[3456789]\d{9}$/;
+		if (!param.test(phone)) {
+			// globalTip({'msg':'手机号不合法，请重新输入','setTime':3});
+			$('.tel-err').removeClass('hide').find("em").text('手机号不完整');
+ 			$('.tel-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			pstatus = false;
+			return false;
+		}
+		// 检测手机号是否已经注册
+		$.ajax({
+            url: '/user/checkPhone',
             type: 'post',
             async: false,
-            data: {"telphone":phone},
+            data: {telphone:phone},
             success:function(data){
                 if (data.code == '0') {
-                    $('.num2-err').addClass('hide');
+                    // $('.tel-err').addClass('hide');
+                    $('.tel-err').removeClass('hide').find("em").text('');
+                    $('.tel-err').find("i").attr('class', 'icon-ok').css("color","#84d54b");
+                    getcode();
+                    pstatus = true;
                 } else {
-                    $('.num2-err').removeClass('hide').text(data.msg);
-                    status = false;
+                	$('.send').off('click');
+                    // $('.tel-err').removeClass('hide').text(data.msg);
+                    $('.tel-err').removeClass('hide').find("em").text(data.data.errMsg);
+ 					$('.tel-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+					pstatus = false;
                 }
             },
             error:function(){
-                status = false;
+            	pstatus = false;
             }
         });
+        return pstatus;
+	}
 
-        return status;
-    }
+	// 检测是否输入验证码
+	function checkcode(code) {
+		if (code == '') {
+			// $('.error').removeClass('hide').text('请输入验证码');
+			$('.error').removeClass('hide').find("em").text('请输入验证码');
+ 			$('.error').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			return false;
+		} else {
+			$('.error').addClass('hide');
+			return true;
+		}
+	}
 
-    // 发送验证码
-    $(".form-data").delegate(".send","click",function () {
-        var phone = $.trim($('#num2').val());
-        if (checkPhone(phone)) {
-            var oTime = $(".form-data .time"),
-                oSend = $(".form-data .send"),
-                num = parseInt(oTime.text()),
-                oEm = $(".form-data .time em");
-            $(this).hide();
-            oTime.removeClass("hide");
-            var timer = setInterval(function () {
-                var num2 = num-=1;
-                oEm.text(num2);
-                if(num2==0){
-                    clearInterval(timer);
-                    oSend.text("重新发送验证码");
-                    oSend.show();
-                    oEm.text("120");
-                    oTime.addClass("hide");
-                }
-            },1000);
-        }
+	$('#passport').blur(function(event) {
+		var password = $(this).val();
+		checkpassport(password);
+	});
+
+	$('#passport2').blur(function(event) {
+		var password2 = $(this).val();
+		checkpassport2(password2);
+	});
+
+	// 检测密码是否合法
+	function checkpassport(passport)
+	{
+		if (passport == '') {
+			$('.pwd-err').removeClass('hide').find("em").text('请输入密码');
+ 			$('.pwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			return false;
+		} else if(passport.length < 6 || passport.length > 20){
+			$('.pwd-err').removeClass('hide').find("em").text('密码为6-20位字母或数字');
+ 			$('.pwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			return false;
+		} else {
+			$('.pwd-err').removeClass('hide').find("em").text('');
+ 			$('.pwd-err').find("i").attr('class', 'icon-ok').css("color","#84d54b");
+			return true;
+		}
+	}
+
+	// 检测密码是否一致
+	function checkpassport2(passport2)
+	{
+		if (passport2 == '') {
+			// $('.confirmpwd-err').removeClass('hide').text('请输入确认密码');
+			$('.confirmpwd-err').removeClass('hide').find("em").text('请输入确认密码');
+ 			$('.confirmpwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			return false;
+		} else if($('#passport').val() != $('#passport2').val()) {
+			// $('.confirmpwd-err').removeClass('hide').text('两次密码输入不一致');
+			$('.confirmpwd-err').removeClass('hide').find("em").text('两次密码不一致');
+ 			$('.confirmpwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			return false;
+		} else {
+			// $('.confirmpwd-err').addClass('hide');
+			$('.confirmpwd-err').removeClass('hide').find("em").text('');
+ 			$('.confirmpwd-err').find("i").attr('class', 'icon-ok').css("color","#84d54b");
+			return true;
+		}
+	}
+
+	// 是否同意协议
+	function checkagree(ag)
+	{
+		if (ag == '1') {
+			// $('.pass-warn').addClass('hide');
+			return true;
+		} else {
+			// $('.pass-warn').removeClass('hide').text('请阅读并同意用户协议');
+			globalTip({'msg':'请阅读并同意用户协议!','setTime':3});
+			return false;
+		}
+	}
+
+	// 输入检测手机号
+	$('#tel').blur(function(event) {
+		checkphone($(this).val());
+	});
+
+	// 获取焦点事件
+	$('#tel').focus(function(event) {
+		$('.send').off('click');
+	});
+
+	// 验证码失去焦点检测验证码
+	$('#veri-code').blur(function(){
+		cpcode();
+	});
+
+	// 检测验证码是否正确
+	function cpcode(){
+		var phone = $.trim($('#tel').val());
+		var code = $.trim($('#veri-code').val());
+		if (checkcode(code)) {
+			$.ajax({
+		            url: '/cpcode',
+		            type: 'post',
+		            dataType: 'json',
+		            async: false,
+		            data: {phone:phone,code:code,type:"reg"},
+		            success:function(data){
+		                if (data.code == '0') {
+		                	cstatus = true;
+		                	// $('.error').addClass('hide');
+		                	$('.error').removeClass('hide').find("em").text('');
+		                	$('.error').find("i").attr('class', 'icon-ok').css("color","#84d54b");
+		                	$('#pwd').removeClass('hide');
+		                	$('#confirmpwd').removeClass('hide');
+		                } else {
+		                	cstatus = false;
+							// $('.error').removeClass('hide').text(data.msg);
+							$('.error').removeClass('hide').find("em").text(data.msg);
+		                	$('.error').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+							$('#pwd').addClass('hide');
+		                	$('#confirmpwd').addClass('hide');
+		                }
+		            },
+		            error:function(){
+		            	cstatus = false;
+		            	// $('.error').removeClass('hide').text(data.msg);
+		            	$('.error').removeClass('hide').find("em").text(data.msg);
+		                $('.error').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+						$('#pwd').addClass('hide');
+		                $('#confirmpwd').addClass('hide');
+		            }
+		        });
+		} else {
+			cstatus = false;
+			return false;
+		}
+		return cstatus;
+	}
+
+	// 注册按钮点击事件
+	$('.lang-btn').on('click',function(){
+		var phone = $.trim($('#tel').val());
+		if (pstatus) {
+			var code = $.trim($('#veri-code').val());
+			if (cstatus) {
+				var passport = $.trim($('#passport').val());
+				var passport2 = $.trim($('#passport2').val());
+				var ag = $("input[name='agree']").val();
+				if (checkpassport(passport) && checkpassport2(passport2) && checkagree(ag)) {
+					$.ajax({
+			            url: '/doreg',
+			            type: 'post',
+			            dataType: 'json',
+			            async: false,
+			            data: {phone:phone,code:code,password:passport,passwordcp:passport2},
+			            success:function(data){
+			                if (data.code == '0') {
+			                	// $('.tel-err').addClass('hide');
+			                	// $('.pwd-err').addClass('hide');
+			                	// $('.confirmpwd-err').addClass('hide');
+			                	// $('.error').addClass('hide');
+			                    globalTip({'msg':'恭喜您，注册成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
+			                } else if(data.code == '1'){
+								// $('.tel-err').removeClass('hide').text(data.msg);
+								$('.tel-err').removeClass('hide').find("em").text(data.msg);
+		                		$('.tel-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			                } else if(data.code == '2'){
+			                	// $('.pwd-err').removeClass('hide').text(data.msg);
+			                	$('.pwd-err').removeClass('hide').find("em").text(data.msg);
+		                		$('.pwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			                } else if(data.code == '3'){
+			                	// $('.confirmpwd-err').removeClass('hide').text(data.msg);
+			                	$('.confirmpwd-err').removeClass('hide').find("em").text(data.msg);
+		                		$('.confirmpwd-err').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			                } else if(data.code == '4'){
+			                	// $('.error').removeClass('hide').text(data.msg);
+			                	$('.error').removeClass('hide').find("em").text(data.msg);
+		                		$('.error').find("i").attr('class', 'icon-warn').css("color","#d9585b");
+			                }
+			            },
+			            error:function(){
+			            	globalTip({'msg':'注册失败!','setTime':3});
+			            }
+			        });
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	});
+
+	// 注册的回车事件
+	$(window).keydown(function(event) {
+    	if (event.keyCode == 13) {
+    		$('.lang-btn').trigger('click');
+    	}
     });
+
+	// 发送验证码点击事件
+	function getcode(){
+		$(".form-data .send").on("click",function () {
+			var phone = $('#tel').val();
+			var note = $('#note').val();
+			var code = $('#veri').val();
+			if (code == '') {
+				globalTip({'msg':'请输入图形验证码!','setTime':3});
+				return false;
+			}
+			if (pstatus) {
+				$.ajax({
+		            url: '/getcode',
+		            type: 'post',
+		            dataType: 'json',
+		            async: true,
+		            data: {phone:phone,type:"reg",note:note,code:code},
+		            success:function(data){
+		                if (data.code == '0') {
+		                    var oTime = $(".form-data .time"),
+							oSend = $(".form-data .send"),
+							num = parseInt(oTime.text()),
+							oEm = $(".form-data .time em");
+						    $('.send').hide();
+						    oTime.removeClass("hide");
+						    var timer = setInterval(function () {
+						   	var num2 = num-=1;
+					            oEm.text(num2);
+					            if(num2==0){
+					                clearInterval(timer);
+					                oSend.text("重新发送验证码");
+								    oSend.show();
+					                oEm.text("120");
+					                oTime.addClass("hide");
+					            }
+					        },1000);
+		                } else if (data.code == '1'){
+		                    globalTip({'msg':'验证码已发送!','setTime':3});
+		                } else {
+		                	globalTip({'msg':'图形验证码错误!','setTime':3});
+		                	$('.code').find('img').attr('src','/user/verifyCode?'+Math.random());
+		                	return false;
+		                }
+		            },
+		            error:function(){
+		                globalTip({'msg':'验证码发送失败!','setTime':3});
+		            }
+		        });
+			} else {
+				return false;
+			}
+	    });
+	}
+	
+	$('.code').find('img').attr('src','/user/verifyCode?'+Math.random()).click(function(event) {
+    	$(this).attr('src', '/user/verifyCode?'+Math.random());
+    });;
+
 });

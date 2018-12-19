@@ -1,4 +1,9 @@
 $(function(){
+    var layer;
+    layui.use('layer', function(){
+        layer = parent.layer === undefined ? layui.layer : parent.layer;
+    });
+
 	var tab = 'account_number';
 	// 选项卡切换
 	$(".account_number").click(function () {
@@ -19,7 +24,9 @@ $(function(){
         $(".account_number").removeClass("on");
 		$(".form2").removeClass("hide");
 		$(".form1").addClass("hide");
-		
+		$('.code2').find('img').attr('src','/user/verifyCode?'+Math.random()).click(function(event) {
+        	$(this).attr('src', '/user/verifyCode?'+Math.random());
+        });
     });
 
 	$('#num').keyup(function(event) {
@@ -37,6 +44,11 @@ $(function(){
 		checkBtn();
 	});
 
+	$('#veri2').keyup(function(event) {
+		$('.tel-warn').addClass('hide');
+		checkBtn();
+	});
+
 	$('#num2').keyup(function(event) {
 		$('.tel-warn').addClass('hide');
 		checkBtn();
@@ -48,7 +60,8 @@ $(function(){
 	});
 
 	// 按钮是否可点击
-	function checkBtn() {
+	function checkBtn()
+	{
 		$(".log-btn").off('click');
 		if (tab == 'account_number') {
 			var inp = $.trim($('#num').val());
@@ -72,7 +85,8 @@ $(function(){
 		} else {
 			var phone = $.trim($('#num2').val());
 			var code2 = $.trim($('#veri-code').val());
-			if (phone != '' && code2 != '') {
+			var code3 = $.trim($('#veri2').val());
+			if (phone != '' && code2 != '' && code3 != '') {
 				$(".log-btn").removeClass("off");
 				sendBtn();
 			} else {
@@ -103,10 +117,8 @@ $(function(){
 
 	function checkCode(code){
 		if (code == '') {
-			// $('.tel-warn').removeClass('hide').text('请输入验证码');
 			return false;
 		} else {
-			// $('.tel-warn').addClass('hide');
 			return true;
 		}
 	}
@@ -117,35 +129,14 @@ $(function(){
 			$('.num2-err').removeClass('hide').find("em").text('请输入手机号');
 			return false;
 		}
-		var param = /^1[34578]\d{9}$/;
+		var param = /^1[345678]\d{9}$/;
 		if (!param.test(phone)) {
 			// globalTip({'msg':'手机号不合法，请重新输入','setTime':3});
 			$('.num2-err').removeClass('hide');
 			$('.num2-err').text('手机号不合法，请重新输入');
 			return false;
 		}
-		$.ajax({
-            url: '/user/getotp',
-            type: 'post',
-            async: false,
-            data: {"telphone":phone},
-            success:function(data){
-                if (data.code == '0') {
-                    $('.num2-err').addClass('hide');
-                    // console.log('aa');
-                    // return true;
-                } else {
-                    $('.num2-err').removeClass('hide').text(data.msg);
-                    // console.log('bb');
-					status = false;
-					// return false;
-                }
-            },
-            error:function(){
-            	status = false;
-                // return false;
-            }
-        });
+
 		return status;
 	}
 
@@ -163,11 +154,10 @@ $(function(){
 	function sendBtn(){
 		if (tab == 'account_number') {
 			$(".log-btn").click(function(){
-				// var type = 'phone';
 				var inp = $.trim($('#num').val());
 				var pass = $.md5($.trim($('#pass').val()));
 				if (checkAccount(inp) && checkPass(pass)) {
-					var ldata = {userinp:inp,password:pass};
+					var ldata = {telphone:inp,otpCode:'',password:pass,type:1};
 					if (!$('.code').hasClass('hide')) {
 						code = $.trim($('#veri').val());
 						if (!checkCode(code)) {
@@ -176,22 +166,22 @@ $(function(){
 						ldata.code = code;
 					}
 					$.ajax({
-			            url: '/dologin',
+			            url: '/user/login',
 			            type: 'post',
-			            dataType: 'json',
-			            async: true,
 			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
-			                    // globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
-			                    globalTip(data.msg);
+                                layer.msg(data.msg,{icon:1});
+                                setTimeout(function () {
+                                    window.location.href = "/index";
+                                }, 2000);
 			                } else if(data.code == '2') {
 			                	$(".log-btn").off('click').addClass("off");
 			                    $('.pass-err').removeClass('hide').find('em').text(data.msg);
 			                    $('.pass-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
 			                    $('.code').removeClass('hide');
-			                    $('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
-			                    	$(this).attr('src', '/verifyCode?'+Math.random());
+			                    $('.code').find('img').attr('src','/user/verifyCode?'+Math.random()).click(function(event) {
+			                    	$(this).attr('src', '/user/verifyCode?'+Math.random());
 			                    });;
 			                    return false;
 			                } else if(data.code == '3') {
@@ -199,8 +189,8 @@ $(function(){
 			                    $('.img-err').removeClass('hide').find('em').text(data.msg);
 			                    $('.img-err').find('i').attr('class', 'icon-warn').css("color","#d9585b");
 			                    $('.code').removeClass('hide');
-			                    $('.code').find('img').attr('src','/verifyCode?'+Math.random()).click(function(event) {
-			                    	$(this).attr('src', '/verifyCode?'+Math.random());
+			                    $('.code').find('img').attr('src','/user/verifyCode?'+Math.random()).click(function(event) {
+			                    	$(this).attr('src', '/user/verifyCode?'+Math.random());
 			                    });
 			                    return false;
 			                } else if(data.code == '1'){
@@ -220,20 +210,20 @@ $(function(){
 			});
 		} else {
 			$(".log-btn").click(function(){
-				// var type = 'phone';
 				var phone = $.trim($('#num2').val());
 				var pcode = $.trim($('#veri-code').val());
-				if (checkPass(pcode)) {
+                var ldata = {telphone:phone,otpCode:pcode,password:'',type:2};
+				if (checkPhone(phone) && checkPhoneCode(pcode)) {
 					$.ajax({
-			            url: '/plogin',
+			            url: '/user/login',
 			            type: 'post',
-			            dataType: 'json',
-			            async: true,
-			            data: {phone:phone,code:pcode},
+			            data: ldata,
 			            success:function(data){
 			                if (data.code == '0') {
-			                	// globalTip({'msg':'登录成功!','setTime':3,'jump':true,'URL':'http://www.ui.cn'});
-			                	globalTip(data.msg);
+                                layer.msg(data.msg,{icon:1});
+                                setTimeout(function () {
+                                    window.location.href = "/index";
+                                }, 2000);
 			                } else if(data.code == '1') {
 			                	$(".log-btn").off('click').addClass("off");
 			                    $('.num2-err').removeClass('hide').text(data.msg);
@@ -267,41 +257,51 @@ $(function(){
 
 	$(".form-data").delegate(".send","click",function () {
 		var phone = $.trim($('#num2').val());
-		if (checkPhone(phone)) {
-				$.ajax({
-		            url: '/getcode',
-		            type: 'post',
-		            dataType: 'json',
-		            async: true,
-		            data: {phone:phone,type:"login"},
-		            success:function(data){
-		                if (data.code == '0') {
-		                    
-		                } else {
-		                    
-		                }
-		            },
-		            error:function(){
-		                
-		            }
-		        });
-	       	var oTime = $(".form-data .time"),
-			oSend = $(".form-data .send"),
-			num = parseInt(oTime.text()),
-			oEm = $(".form-data .time em");
-		    $(this).hide();
-		    oTime.removeClass("hide");
-		    var timer = setInterval(function () {
-		   	var num2 = num-=1;
-	            oEm.text(num2);
-	            if(num2==0){
-	                clearInterval(timer);
-	                oSend.text("重新发送验证码");
-				    oSend.show();
-	                oEm.text("120");
-	                oTime.addClass("hide");
-	            }
-	        },1000);
+		var note = $('#note').val();
+		var code = $('#veri2').val();
+		if (code == '') {
+			globalTip({'msg':'请输入图形验证码!','setTime':3});
+			return false;
 		}
+
+		// 发送验证码
+        $.ajax({
+            url: '/user/getotp',
+            type: 'post',
+            async: true,
+            data: {'telphone':phone},
+            success:function(data){
+                if (data.code == '0') {
+                    var oTime = $(".form-data .time"),
+                        oSend = $(".form-data .send"),
+                        num = parseInt(oTime.text()),
+                        oEm = $(".form-data .time em");
+                    $(".form-data .send").hide();
+                    oTime.removeClass("hide");
+                    var timer = setInterval(function () {
+                        var num2 = num-=1;
+                        oEm.text(num2);
+                        if(num2==0){
+                            clearInterval(timer);
+                            oSend.text("重新发送验证码");
+                            oSend.show();
+                            oEm.text("120");
+                            oTime.addClass("hide");
+                        }
+                    },1000);
+                } else if(data.code == '1'){
+                    globalTip({'msg':'验证码已发送!','setTime':3});
+                } else {
+                    globalTip({'msg':'图形验证码错误!','setTime':3});
+                    $('.code2').find('img').attr('src','/user/verifyCode?'+Math.random())
+                }
+            },
+            error:function(){
+                globalTip({'msg':'验证码发送失败!','setTime':3});
+            }
+        });
     });
+
+
+
 });

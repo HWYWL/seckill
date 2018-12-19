@@ -12,6 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
 
     /**
+     * 主页
+     * @return
+     */
+    @RequestMapping("/index")
+    public String index(){
+        return "index";
+    }
+
+    /**
      * 登录页面
      * @return
      */

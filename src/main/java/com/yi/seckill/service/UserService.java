@@ -11,4 +11,11 @@ public interface UserService extends CommonService<UserInfo> {
      * @return
      */
     UserModel selectByPrimaryAllId(Integer id);
+
+    /**
+     * 根据用户手机号码查找数据
+     * @param telphone 用户手机号码
+     * @return
+     */
+    UserInfo selectByTelPhone(String telphone);
 }
