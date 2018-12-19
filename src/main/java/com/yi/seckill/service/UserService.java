@@ -6,6 +6,7 @@ import com.yi.seckill.model.UserInfo;
 import com.yi.seckill.model.UserModel;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户数据接口
@@ -19,6 +20,12 @@ public interface UserService extends CommonService<UserInfo> {
      * @return
      */
     UserModel selectByPrimaryAllId(Integer id);
+
+    /**
+     * 查找所有用户数据
+     * @return
+     */
+    List<UserInfo> selectAllUser();
 
     /**
      * 根据用户手机号码查找数据,包含连表的密码

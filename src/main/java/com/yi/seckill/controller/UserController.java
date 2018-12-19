@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 用户
@@ -37,6 +38,17 @@ public class UserController extends BaseController {
 
     @Autowired
     HttpServletRequest httpServletRequest;
+
+    /**
+     * 查找所有用户数据
+     * @return
+     */
+    @RequestMapping(value = "selectAllUser", method = RequestMethod.GET)
+    public MessageResult selectAllUser() {
+        List<UserInfo> userInfos = userService.selectAllUser();
+
+        return MessageResult.ok(userInfos);
+    }
 
     /**
      * 获取用户otp短信接口
@@ -197,11 +209,12 @@ public class UserController extends BaseController {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "验证码不能为空");
         }
 
-        UserInfo login = userService.login(telphone, otpCode, password, type, this.httpServletRequest);
+        UserInfo userInfo = userService.login(telphone, otpCode, password, type, this.httpServletRequest);
 
         // 把登录状态放在session中
         this.httpServletRequest.getSession().setAttribute("IS_LOGIN", true);
+        this.httpServletRequest.getSession().setAttribute("LOGIN_USER", userInfo);
 
-        return MessageResult.ok(login);
+        return MessageResult.ok();
     }
 }

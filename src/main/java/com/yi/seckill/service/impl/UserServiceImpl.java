@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户操作逻辑实现
@@ -34,6 +35,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel selectByPrimaryAllId(Integer id) {
         return userInfoMapper.selectByPrimaryAllId(id);
+    }
+
+    @Override
+    public List<UserInfo> selectAllUser() {
+        return userInfoMapper.selectAll();
     }
 
     @Override
