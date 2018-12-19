@@ -1,8 +1,11 @@
 package com.yi.seckill.service;
 
+import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.CommonService;
 import com.yi.seckill.model.UserInfo;
 import com.yi.seckill.model.UserModel;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户数据接口
@@ -36,4 +39,14 @@ public interface UserService extends CommonService<UserInfo> {
      * @param userModel
      */
     void insertSelective(UserModel userModel);
+
+    /**
+     * 用户登录
+     * @param telphone  用户手机号码
+     * @param otpCode   短信验证码
+     * @param password  密码
+     * @param type      登录类型 1:账号密码登录、2:手机+验证码登录
+     * @param httpServletRequest
+     */
+    UserInfo login(String telphone, String otpCode, String password, Integer type, HttpServletRequest httpServletRequest) throws BusinessException;
 }

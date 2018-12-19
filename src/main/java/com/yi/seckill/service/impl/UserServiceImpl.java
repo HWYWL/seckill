@@ -1,7 +1,10 @@
 package com.yi.seckill.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.yi.seckill.common.BusinessException;
+import com.yi.seckill.common.EmBusinessError;
+import com.yi.seckill.common.EmLoginType;
 import com.yi.seckill.dao.UserInfoMapper;
 import com.yi.seckill.dao.UserPasswordMapper;
 import com.yi.seckill.model.UserInfo;
@@ -13,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户操作逻辑实现
+ *
  * @author YI
  * @date 2018-12-19 15:33:05
  */
@@ -65,5 +71,38 @@ public class UserServiceImpl implements UserService {
 
         // 保存用户密码数据
         userPasswordMapper.insertSelective(userPassword);
+    }
+
+    @Override
+    public UserInfo login(String telphone, String otpCode, String password, Integer type,
+                          HttpServletRequest httpServletRequest) throws BusinessException {
+
+        UserInfo userInfo = new UserInfo();
+        // 手机号+密码登录
+        if (type == EmLoginType.USERNAME_PHONE_PASSWORD.getTypeCode()) {
+            UserModel userModel = selectByPrimaryAllTelPhone(telphone);
+            // 用户不存在
+            if (userModel == null) {
+                throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+            } else if (StrUtil.equals(userModel.getEncrptPassword(), password)) {
+                BeanUtil.copyProperties(userModel, userInfo);
+            } else {
+                throw new BusinessException(EmBusinessError.USER_LOGIN_PASSWORD_ERROR);
+            }
+        } else if (type == EmLoginType.PHONE_OTP.getTypeCode()) {
+            userInfo = selectByTelPhone(telphone);
+            // 验证码登录
+            String inSessionOtpCode = (String) httpServletRequest.getSession().getAttribute(telphone);
+            // 用户不存在
+            if (userInfo == null) {
+                throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+            } else if (StrUtil.equals(otpCode, inSessionOtpCode)) {
+                System.out.println("登陆成功");
+            } else {
+                throw new BusinessException(EmBusinessError.OTP_CODE_NOT_EXIST);
+            }
+        }
+
+        return userInfo;
     }
 }
