@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all">
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+
+<div class="header">
+    <div class="headerLayout w1200">
+        <div class="headerCon">
+            <div class="mallSearch">
+                <form action="" class="layui-form" novalidate>
+                    <input type="text" name="title" required lay-verify="required" autocomplete="off"
+                           class="layui-input" placeholder="请输入需要的商品">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                    <input type="hidden" name="" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content content-nav-base datails-content">
+    <div class="data-cont-wrap w1200">
+        <div class="product-intro layui-clear">
+            <div class="preview-wrap">
+                <a href="javascript:;"><img src="https://i.imgur.com/yPHeCEz.jpg"></a>
+            </div>
+            <div class="itemInfo-wrap">
+                <div class="itemInfo">
+                    <form class="layui-form" action="">
+                        <div class="title" id="title"></div>
+                        <div class="summary" id="summary"></div>
+                        <div class="choose-attrs">
+                            <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
+                                <div class="number-cont"><span class="cut btn">-</span><input
+                                        onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                        onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                        maxlength="4" type="" name="" value="1"><span class="add btn">+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" pane style="display: none">
+                            <div class="layui-input-block" id="quantity">
+                                <input type="text" name="quantity" autocomplete="off" class="layui-input" value="1">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" pane style="display: none">
+                            <div class="layui-input-block" id="itemId"></div>
+                        </div>
+
+
+                        <div class="choose-btns">
+                            <button class="layui-btn layui-btn-primary purchase-btn" lay-submit lay-filter="buy">立刻购买
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/js/util/'
+    }).use(['mm', 'jquery'], function () {
+        var mm = layui.mm, $ = layui.$;
+        var cur = $('.number-cont input').val();
+        $('.number-cont .btn').on('click', function () {
+            if ($(this).hasClass('add')) {
+                cur++;
+
+            } else {
+                if (cur > 1) {
+                    cur--;
+                }
+            }
+            $('.number-cont input').val(cur);
+            $('#quantity input').val(cur);
+        })
+
+    });
+</script>
+<script src="/js/index.js"></script>
+</body>
+</html>

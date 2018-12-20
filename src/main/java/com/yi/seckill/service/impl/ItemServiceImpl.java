@@ -34,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(rollbackFor = BusinessException.class)
     @Override
     public ItemModel createItem(ItemModel itemModel) throws BusinessException {
+        // 参数校验
         ValidationResult validate = validator.validate(itemModel);
         if (validate.isHasErrors()){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, validate.getErrMsg());
@@ -65,6 +66,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item selectById(Integer id) {
-        return null;
+        return itemMapper.selectByPrimaryId(id);
     }
 }

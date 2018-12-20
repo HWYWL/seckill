@@ -55,4 +55,13 @@ public class PageController {
     public String addItemPage(){
         return "page/addItem";
     }
+
+    /**
+     * 商品详情页面
+     * @return
+     */
+    @RequestMapping("/details")
+    public String details(){
+        return "page/details";
+    }
 }

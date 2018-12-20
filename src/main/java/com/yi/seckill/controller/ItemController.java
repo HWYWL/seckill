@@ -5,10 +5,7 @@ import com.yi.seckill.model.ItemModel;
 import com.yi.seckill.service.ItemService;
 import com.yi.seckill.utils.MessageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,6 +34,17 @@ public class ItemController extends BaseController{
     }
 
     /**
+     * 根据id查询商品商品
+     * @return
+     */
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public MessageResult detail(@RequestParam(name = "id")Integer id) {
+        ItemModel itemModel = itemService.selectByPrimaryAllId(id);
+
+        return MessageResult.ok(itemModel);
+    }
+
+    /**
      * 创建商品
      * @param title         商品名称
      * @param price         商品价格
@@ -56,5 +64,21 @@ public class ItemController extends BaseController{
         ItemModel item = itemService.createItem(itemModel);
 
         return MessageResult.ok(item);
+    }
+
+    /**
+     * 购买商品
+     * @param id        商品id
+     * @param quantity  购买的商品数量
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping(value = "/buy", method = RequestMethod.POST)
+    public MessageResult buy(@RequestParam(name = "id")Integer id,
+                                    @RequestParam(name = "quantity")Integer quantity) {
+        MessageResult result = MessageResult.ok();
+        result.setMsg("商品购买成功");
+
+        return result;
     }
 }
