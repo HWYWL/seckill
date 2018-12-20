@@ -46,4 +46,13 @@ public class PageController {
     public String reg(){
         return "page/reg";
     }
+
+    /**
+     * 添加商品页面
+     * @return
+     */
+    @RequestMapping("/addItemPage")
+    public String addItemPage(){
+        return "page/addItem";
+    }
 }

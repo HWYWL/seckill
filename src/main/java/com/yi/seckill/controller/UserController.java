@@ -13,12 +13,12 @@ import com.yi.seckill.model.UserInfo;
 import com.yi.seckill.model.UserModel;
 import com.yi.seckill.service.UserService;
 import com.yi.seckill.utils.MessageResult;
+import com.yi.seckill.validator.ValidationResult;
+import com.yi.seckill.validator.ValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,12 +32,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = {"*"}, allowCredentials = "true")
 public class UserController extends BaseController {
     @Autowired
     UserService userService;
 
     @Autowired
     HttpServletRequest httpServletRequest;
+
+    @Resource
+    ValidatorImpl validator;
 
     /**
      * 查找所有用户数据
@@ -128,6 +132,14 @@ public class UserController extends BaseController {
                                   @RequestParam(name = "gender") Integer gender,
                                   @RequestParam(name = "age") Integer age) throws BusinessException {
 
+        UserModel userModel = new UserModel(name, gender.byteValue(), age, telphone, registerMode, password);
+
+        // 参数校验
+        ValidationResult validate = validator.validate(userModel);
+        if (validate.isHasErrors()){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, validate.getErrMsg());
+        }
+
         // 获取存取session中的otpCode
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
 
@@ -145,14 +157,6 @@ public class UserController extends BaseController {
         if (StrUtil.isEmpty(name) || gender == null || age == null) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "参数不能为空！！！");
         }
-
-        UserModel userModel = new UserModel();
-        userModel.setTelphone(telphone);
-        userModel.setEncrptPassword(SecureUtil.md5(password));
-        userModel.setAge(age);
-        userModel.setGender(gender.byteValue());
-        userModel.setName(name);
-        userModel.setRegisterMode(registerMode);
 
         userService.insertSelective(userModel);
 

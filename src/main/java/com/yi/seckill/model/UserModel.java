@@ -1,5 +1,9 @@
 package com.yi.seckill.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -16,16 +20,21 @@ public class UserModel implements Serializable {
     /**
      * 用户名
      */
+    @NotBlank(message = "用户名不能为空")
     private String name;
 
     /**
      * 性别
      */
+    @NotNull(message = "性别不能留空")
     private Byte gender;
 
     /**
      * 年龄
      */
+    @NotNull(message = "年龄不能留空")
+    @Min(value = 0, message = "年龄必须大于0岁")
+    @Max(value = 150, message = "年龄必须小于150岁")
     private Integer age;
 
     /**
@@ -49,6 +58,30 @@ public class UserModel implements Serializable {
     private String encrptPassword;
 
     private static final long serialVersionUID = 1L;
+
+    public UserModel() {
+        super();
+    }
+
+    public UserModel(Integer id, String name, Byte gender, Integer age, String telphone, String registerMode, String thirdPartyId, String encrptPassword) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.telphone = telphone;
+        this.registerMode = registerMode;
+        this.thirdPartyId = thirdPartyId;
+        this.encrptPassword = encrptPassword;
+    }
+
+    public UserModel(String name, Byte gender, Integer age, String telphone, String registerMode, String encrptPassword) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.telphone = telphone;
+        this.registerMode = registerMode;
+        this.encrptPassword = encrptPassword;
+    }
 
     public Integer getId() {
         return id;
