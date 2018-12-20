@@ -1,0 +1,79 @@
+package com.yi.seckill.model;
+
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 订单
+ * @author YI
+ * @date 2018-12-20 18:00:15
+ */
+public class OrderInfo  implements Serializable {
+
+  private String id;
+  private Integer userId;
+  private Integer itemId;
+  private BigDecimal itemPrice;
+  private Integer amount;
+  private BigDecimal orderPrice;
+  private Date crtTime;
+
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public Integer getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Integer userId) {
+    this.userId = userId;
+  }
+
+  public Integer getItemId() {
+    return itemId;
+  }
+
+  public void setItemId(Integer itemId) {
+    this.itemId = itemId;
+  }
+
+  public BigDecimal getItemPrice() {
+    return itemPrice;
+  }
+
+  public void setItemPrice(BigDecimal itemPrice) {
+    this.itemPrice = itemPrice;
+  }
+
+  public Integer getAmount() {
+    return amount;
+  }
+
+  public void setAmount(Integer amount) {
+    this.amount = amount;
+  }
+
+  public BigDecimal getOrderPrice() {
+    return orderPrice;
+  }
+
+  public void setOrderPrice(BigDecimal orderPrice) {
+    this.orderPrice = orderPrice;
+  }
+
+  public Date getCrtTime() {
+    return crtTime;
+  }
+
+  public void setCrtTime(Date crtTime) {
+    this.crtTime = crtTime;
+  }
+}

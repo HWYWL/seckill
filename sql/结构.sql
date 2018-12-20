@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-20 17:33:07
+Date: 2018-12-20 18:01:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
   `title` varchar(64) NOT NULL DEFAULT '' COMMENT 'title',
   `price` decimal(10,0) NOT NULL COMMENT '商品价格',
   `description` varchar(500) NOT NULL DEFAULT '' COMMENT '商品描述',
@@ -35,11 +35,26 @@ CREATE TABLE `item` (
 -- ----------------------------
 DROP TABLE IF EXISTS `item_stock`;
 CREATE TABLE `item_stock` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '库存ID',
   `stock` int(11) NOT NULL DEFAULT '0' COMMENT '商品库存',
   `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='库存表';
+
+-- ----------------------------
+-- Table structure for order_info
+-- ----------------------------
+DROP TABLE IF EXISTS `order_info`;
+CREATE TABLE `order_info` (
+  `id` varchar(32) NOT NULL COMMENT '订单ID',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
+  `item_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '当时商品价格',
+  `amount` int(11) NOT NULL DEFAULT '0' COMMENT '购买商品的数量',
+  `order_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '购买金额',
+  `crt_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 -- ----------------------------
 -- Table structure for user_info
