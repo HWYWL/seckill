@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-20 18:01:29
+Date: 2018-12-21 16:47:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -55,6 +55,17 @@ CREATE TABLE `order_info` (
   `crt_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
+
+-- ----------------------------
+-- Table structure for sequence_info
+-- ----------------------------
+DROP TABLE IF EXISTS `sequence_info`;
+CREATE TABLE `sequence_info` (
+  `name` varchar(255) NOT NULL COMMENT '所属表',
+  `current_value` int(11) NOT NULL DEFAULT '0' COMMENT '当前值',
+  `step` int(11) NOT NULL DEFAULT '1' COMMENT '步长',
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单序列表';
 
 -- ----------------------------
 -- Table structure for user_info

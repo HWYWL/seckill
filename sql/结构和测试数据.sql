@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-20 18:01:37
+Date: 2018-12-21 16:47:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,9 +33,9 @@ CREATE TABLE `item` (
 -- ----------------------------
 -- Records of item
 -- ----------------------------
-INSERT INTO `item` VALUES ('1', '宝宝秋装', '10', '男女宝宝秋冬装套装0一1岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '0', 'https://i.imgur.com/hkO4BMl.jpg', '2018-12-20 14:30:36');
-INSERT INTO `item` VALUES ('2', '宝宝粉色连体秋裤', '4', '男女宝宝秋连体冬装2一4岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '0', 'https://i.imgur.com/yPHeCEz.jpg', '2018-12-20 14:51:25');
-INSERT INTO `item` VALUES ('3', '毛绒鞋子', '25', '宝宝鞋子婴儿冬鞋新生儿鞋子男女宝宝学步鞋保暖加绒软底鞋0-1岁', '0', 'https://i.imgur.com/h3jUoik.jpg', '2018-12-20 17:32:01');
+INSERT INTO `item` VALUES ('1', '宝宝秋装', '10', '男女宝宝秋冬装套装0一1岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '8', 'https://i.imgur.com/hkO4BMl.jpg', '2018-12-20 14:30:36');
+INSERT INTO `item` VALUES ('2', '宝宝粉色连体秋裤', '4', '男女宝宝秋连体冬装2一4岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '6', 'https://i.imgur.com/yPHeCEz.jpg', '2018-12-20 14:51:25');
+INSERT INTO `item` VALUES ('3', '毛绒鞋子', '25', '宝宝鞋子婴儿冬鞋新生儿鞋子男女宝宝学步鞋保暖加绒软底鞋0-1岁', '14', 'https://i.imgur.com/h3jUoik.jpg', '2018-12-20 17:32:01');
 
 -- ----------------------------
 -- Table structure for item_stock
@@ -51,9 +51,9 @@ CREATE TABLE `item_stock` (
 -- ----------------------------
 -- Records of item_stock
 -- ----------------------------
-INSERT INTO `item_stock` VALUES ('1', '10000', '1');
-INSERT INTO `item_stock` VALUES ('2', '500', '2');
-INSERT INTO `item_stock` VALUES ('3', '666', '3');
+INSERT INTO `item_stock` VALUES ('1', '9990', '1');
+INSERT INTO `item_stock` VALUES ('2', '488', '2');
+INSERT INTO `item_stock` VALUES ('3', '642', '3');
 
 -- ----------------------------
 -- Table structure for order_info
@@ -73,6 +73,35 @@ CREATE TABLE `order_info` (
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
+INSERT INTO `order_info` VALUES ('201812210000000', '2', '3', '25', '1', '25', '2018-12-21 16:01:57');
+INSERT INTO `order_info` VALUES ('201812210000100', '2', '3', '25', '1', '25', '2018-12-21 16:05:58');
+INSERT INTO `order_info` VALUES ('201812210000200', '2', '3', '25', '1', '25', '2018-12-21 16:08:42');
+INSERT INTO `order_info` VALUES ('201812210000300', '2', '1', '10', '1', '10', '2018-12-21 16:09:52');
+INSERT INTO `order_info` VALUES ('201812210000400', '2', '2', '4', '1', '4', '2018-12-21 16:09:57');
+INSERT INTO `order_info` VALUES ('201812210000500', '2', '3', '25', '1', '25', '2018-12-21 16:10:44');
+INSERT INTO `order_info` VALUES ('201812210000600', '2', '2', '4', '1', '4', '2018-12-21 16:18:40');
+INSERT INTO `order_info` VALUES ('201812210000700', '2', '2', '4', '4', '16', '2018-12-21 16:18:59');
+INSERT INTO `order_info` VALUES ('201812210000800', '2', '2', '4', '3', '12', '2018-12-21 16:29:58');
+INSERT INTO `order_info` VALUES ('201812210000900', '2', '2', '4', '3', '12', '2018-12-21 16:30:06');
+INSERT INTO `order_info` VALUES ('20181221001000', '2', '1', '10', '1', '10', '2018-12-21 16:38:29');
+INSERT INTO `order_info` VALUES ('20181221001100', '2', '1', '10', '7', '70', '2018-12-21 16:39:00');
+INSERT INTO `order_info` VALUES ('20181221001200', '2', '3', '25', '14', '350', '2018-12-21 16:39:13');
+
+-- ----------------------------
+-- Table structure for sequence_info
+-- ----------------------------
+DROP TABLE IF EXISTS `sequence_info`;
+CREATE TABLE `sequence_info` (
+  `name` varchar(255) NOT NULL COMMENT '所属表',
+  `current_value` int(11) NOT NULL DEFAULT '0' COMMENT '当前值',
+  `step` int(11) NOT NULL DEFAULT '1' COMMENT '步长',
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单序列表';
+
+-- ----------------------------
+-- Records of sequence_info
+-- ----------------------------
+INSERT INTO `sequence_info` VALUES ('order_info', '13', '1');
 
 -- ----------------------------
 -- Table structure for user_info

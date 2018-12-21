@@ -12,8 +12,11 @@ public enum EmBusinessError implements CommonError {
     USER_NOT_EXIST(20001, "用户不存在"),
     USER_IS_EXIST(20002, "用户已经存在"),
     USER_LOGIN_PASSWORD_ERROR(20003, "用户名或密码错误"),
+    USER_IS_NOT_LOGGED_IN(20004, "用户未登录"),
 
-    OTP_CODE_NOT_EXIST(30001, "验证码不匹配");
+    OTP_CODE_NOT_EXIST(30001, "验证码不匹配"),
+    ITEM_NOT_EXIST(40001, "商品不存在"),
+    STOCK_OF_ITEM_IS_SHORT(40002, "商品库存不足");
 
     private int errCode;
     private String errMsg;

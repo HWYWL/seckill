@@ -14,6 +14,7 @@ import com.yi.seckill.validator.ValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -65,6 +66,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(rollbackFor = BusinessException.class)
+    public boolean decreaseStock(Integer itemId, Integer amount) {
+        int affectedRow = itemStockMapper.decreaseStock(itemId, amount);
+
+        return affectedRow > 0;
+    }
+
+    @Override
+    public void increaseSales(Integer itemId, Integer ammount) {
+        itemMapper.increaseSales(itemId, ammount);
+    }
+
+    @Override
+    @Transactional(rollbackFor = BusinessException.class)
     public Item selectById(Integer id) {
         return itemMapper.selectByPrimaryId(id);
     }

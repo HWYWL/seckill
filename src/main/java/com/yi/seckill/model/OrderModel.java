@@ -38,6 +38,27 @@ public class OrderModel {
      */
     private BigDecimal orderPrice;
 
+    public OrderModel() {
+        super();
+    }
+
+    public OrderModel(Integer userId, Integer itemId, Integer amount, BigDecimal itemPrice, BigDecimal orderPrice) {
+        this.userId = userId;
+        this.itemId = itemId;
+        this.amount = amount;
+        this.itemPrice = itemPrice;
+        this.orderPrice = orderPrice;
+    }
+
+    public OrderModel(String id, Integer userId, Integer itemId, Integer amount, BigDecimal itemPrice, BigDecimal orderPrice) {
+        this.id = id;
+        this.userId = userId;
+        this.itemId = itemId;
+        this.amount = amount;
+        this.itemPrice = itemPrice;
+        this.orderPrice = orderPrice;
+    }
+
     public String getId() {
         return id;
     }

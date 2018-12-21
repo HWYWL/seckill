@@ -1,6 +1,9 @@
 package com.yi.seckill.model;
 
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,12 +15,41 @@ import java.util.Date;
  */
 public class OrderInfo  implements Serializable {
 
+  /**
+   * 订单号
+   */
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private String id;
+
+  /**
+   * 用户id
+   */
   private Integer userId;
+
+  /**
+   * 商品id
+   */
   private Integer itemId;
-  private BigDecimal itemPrice;
+
+  /**
+   * 购买商品的数量
+   */
   private Integer amount;
+
+  /**
+   * 购买商品单价
+   */
+  private BigDecimal itemPrice;
+
+  /**
+   * 购买金额
+   */
   private BigDecimal orderPrice;
+
+  /**
+   * 订单创建时间
+   */
   private Date crtTime;
 
 

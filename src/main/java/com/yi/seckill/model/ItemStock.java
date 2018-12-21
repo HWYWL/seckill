@@ -1,5 +1,8 @@
 package com.yi.seckill.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -9,6 +12,8 @@ import java.io.Serializable;
  */
 public class ItemStock implements Serializable {
 
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Integer id;
   /**
    * 库存
@@ -18,6 +23,22 @@ public class ItemStock implements Serializable {
    * 商品id
    */
   private Integer itemId;
+
+  public ItemStock() {
+    super();
+  }
+
+  public ItemStock(Integer stock, Integer itemId) {
+    this.stock = stock;
+    this.itemId = itemId;
+  }
+
+  public ItemStock(Integer id, Integer stock, Integer itemId) {
+    this.id = id;
+    this.stock = stock;
+    this.itemId = itemId;
+  }
+
 
 
   public Integer getId() {

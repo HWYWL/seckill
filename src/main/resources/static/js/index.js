@@ -53,11 +53,12 @@ function initTable() {
                                 var itemId = layer.getChildFrame("#itemId");
 
                                 title.append("<h4>" + result.data.description + "</h4>");
-                                summary.append("<p class='reference'><span>参考价</span> <del>￥15280.00</del></p>\n" +
+                                summary.append(
                                     "              <p class='activity'><span>活动价</span><strong class='price'><i>￥</i>" + result.data.price + "</strong></p>\n" +
-                                    "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>");
+                                    "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>"+
+                                    "              <p class='activity'><span>销量</span><strong class='item'><i></i>" + result.data.sales + "</strong></p>");
 
-                                itemId.append("<input type='text' name='id' autocomplete='off' class='layui-input' value='"+data.id+"'>");
+                                itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='"+data.id+"'>");
                             }
 
                             form.render();
@@ -136,8 +137,14 @@ function initTable() {
                     } else {
                         layer.load(1, {time: 1000});
                         setTimeout(function () {
-                            layer.msg(result.msg, {icon: 5});
+                            layer.msg(result.data.errMsg, {icon: 5});
                         }, 1000);
+                        setTimeout(function () {
+                            // 用户未登录
+                            if (result.data.errCode == 20004){
+                                window.parent.location.replace("/login");
+                            }
+                        }, 2000);
                     }
                 }
             });

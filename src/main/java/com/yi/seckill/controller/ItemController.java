@@ -1,12 +1,16 @@
 package com.yi.seckill.controller;
 
 import com.yi.seckill.common.BusinessException;
+import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.model.ItemModel;
+import com.yi.seckill.model.UserInfo;
 import com.yi.seckill.service.ItemService;
+import com.yi.seckill.service.OrderService;
 import com.yi.seckill.utils.MessageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,6 +25,11 @@ import java.util.List;
 public class ItemController extends BaseController{
     @Autowired
     ItemService itemService;
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
 
     /**
      * 获取所有商品
@@ -68,15 +77,24 @@ public class ItemController extends BaseController{
 
     /**
      * 购买商品
-     * @param id        商品id
-     * @param quantity  购买的商品数量
+     * @param itemId    商品id
+     * @param amount  购买的商品数量
      * @return
      * @throws BusinessException
      */
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
-    public MessageResult buy(@RequestParam(name = "id")Integer id,
-                                    @RequestParam(name = "quantity")Integer quantity) {
+    public MessageResult buy(@RequestParam(name = "itemId")Integer itemId,
+                             @RequestParam(name = "amount")Integer amount) throws BusinessException {
         MessageResult result = MessageResult.ok();
+        Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("IS_LOGIN");
+        if (isLogin == null || !isLogin){
+            throw new BusinessException(EmBusinessError.USER_IS_NOT_LOGGED_IN);
+        }
+
+        UserInfo userInfo = (UserInfo) httpServletRequest.getSession().getAttribute("LOGIN_USER");
+
+        orderService.createOrder(userInfo.getId(), itemId, amount);
+
         result.setMsg("商品购买成功");
 
         return result;

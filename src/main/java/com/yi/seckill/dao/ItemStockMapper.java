@@ -1,7 +1,9 @@
 package com.yi.seckill.dao;
 
 import com.yi.seckill.model.ItemStock;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -17,4 +19,13 @@ public interface ItemStockMapper extends Mapper<ItemStock> {
      */
     @Select("SELECT * FROM item_stock AS e1 where e1.id = #{id};")
     ItemStock selectByPrimaryId(Integer id);
+
+    /**
+     * 库存扣减
+     * @param itemId    商品id
+     * @param stock     扣减的库存商量
+     * @return
+     */
+    @Update("UPDATE item_stock SET stock = stock - #{stock} WHERE ( ( item_id = #{itemId} and stock > #{stock} ) )")
+    int decreaseStock(@Param("itemId")Integer itemId, @Param("stock")Integer stock);
 }

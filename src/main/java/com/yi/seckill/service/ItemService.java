@@ -31,4 +31,19 @@ public interface ItemService extends CommonService<Item> {
      * @return 商品模型
      */
     ItemModel selectByPrimaryAllId(Integer id);
+
+    /**
+     * 库存扣减
+     * @param itemId    商品id
+     * @param amount    扣减的库存商量
+     * @return true为成功，false为失败
+     */
+    boolean decreaseStock(Integer itemId, Integer amount);
+
+    /**
+     * 商品销量增加
+     * @param itemId  商品id
+     * @param ammount 销量
+     */
+    void increaseSales(Integer itemId, Integer ammount);
 }
