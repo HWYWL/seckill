@@ -3,8 +3,18 @@ package com.yi.seckill.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * 秒杀模型
+ * @author YI
+ * @date 2018-12-21 17:24:08
+ */
 public class PromoModel {
     private Integer id;
+
+    /**
+     * 秒杀活动状态，-1：已经结束、0:未开始、1:进行中
+     */
+    private Integer status;
 
     /**
      * 秒杀名称
@@ -37,6 +47,14 @@ public class PromoModel {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getPromoName() {

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-21 16:47:41
+Date: 2018-12-21 18:13:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
   `title` varchar(64) NOT NULL DEFAULT '' COMMENT 'title',
-  `price` decimal(10,0) NOT NULL COMMENT '商品价格',
+  `price` decimal(10,2) NOT NULL COMMENT '商品价格',
   `description` varchar(500) NOT NULL DEFAULT '' COMMENT '商品描述',
   `sales` int(11) NOT NULL DEFAULT '0' COMMENT '商品销量',
   `img_url` varchar(255) NOT NULL DEFAULT '' COMMENT '商品描述图片URL',
@@ -33,9 +33,9 @@ CREATE TABLE `item` (
 -- ----------------------------
 -- Records of item
 -- ----------------------------
-INSERT INTO `item` VALUES ('1', '宝宝秋装', '10', '男女宝宝秋冬装套装0一1岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '8', 'https://i.imgur.com/hkO4BMl.jpg', '2018-12-20 14:30:36');
-INSERT INTO `item` VALUES ('2', '宝宝粉色连体秋裤', '4', '男女宝宝秋连体冬装2一4岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '6', 'https://i.imgur.com/yPHeCEz.jpg', '2018-12-20 14:51:25');
-INSERT INTO `item` VALUES ('3', '毛绒鞋子', '25', '宝宝鞋子婴儿冬鞋新生儿鞋子男女宝宝学步鞋保暖加绒软底鞋0-1岁', '14', 'https://i.imgur.com/h3jUoik.jpg', '2018-12-20 17:32:01');
+INSERT INTO `item` VALUES ('1', '宝宝秋装', '10.00', '男女宝宝秋冬装套装0一1岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '8', 'https://i.imgur.com/hkO4BMl.jpg', '2018-12-20 14:30:36');
+INSERT INTO `item` VALUES ('2', '宝宝粉色连体秋裤', '36.00', '男女宝宝秋连体冬装2一4岁婴儿衣服潮加厚连体衣保暖冬季外出抱衣', '6', 'https://i.imgur.com/yPHeCEz.jpg', '2018-12-20 14:51:25');
+INSERT INTO `item` VALUES ('3', '毛绒鞋子', '25.00', '宝宝鞋子婴儿冬鞋新生儿鞋子男女宝宝学步鞋保暖加绒软底鞋0-1岁', '14', 'https://i.imgur.com/h3jUoik.jpg', '2018-12-20 17:32:01');
 
 -- ----------------------------
 -- Table structure for item_stock
@@ -63,9 +63,9 @@ CREATE TABLE `order_info` (
   `id` varchar(32) NOT NULL COMMENT '订单ID',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
-  `item_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '当时商品价格',
+  `item_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '当时商品价格',
   `amount` int(11) NOT NULL DEFAULT '0' COMMENT '购买商品的数量',
-  `order_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '购买金额',
+  `order_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '购买金额',
   `crt_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
@@ -73,19 +73,38 @@ CREATE TABLE `order_info` (
 -- ----------------------------
 -- Records of order_info
 -- ----------------------------
-INSERT INTO `order_info` VALUES ('201812210000000', '2', '3', '25', '1', '25', '2018-12-21 16:01:57');
-INSERT INTO `order_info` VALUES ('201812210000100', '2', '3', '25', '1', '25', '2018-12-21 16:05:58');
-INSERT INTO `order_info` VALUES ('201812210000200', '2', '3', '25', '1', '25', '2018-12-21 16:08:42');
-INSERT INTO `order_info` VALUES ('201812210000300', '2', '1', '10', '1', '10', '2018-12-21 16:09:52');
-INSERT INTO `order_info` VALUES ('201812210000400', '2', '2', '4', '1', '4', '2018-12-21 16:09:57');
-INSERT INTO `order_info` VALUES ('201812210000500', '2', '3', '25', '1', '25', '2018-12-21 16:10:44');
-INSERT INTO `order_info` VALUES ('201812210000600', '2', '2', '4', '1', '4', '2018-12-21 16:18:40');
-INSERT INTO `order_info` VALUES ('201812210000700', '2', '2', '4', '4', '16', '2018-12-21 16:18:59');
-INSERT INTO `order_info` VALUES ('201812210000800', '2', '2', '4', '3', '12', '2018-12-21 16:29:58');
-INSERT INTO `order_info` VALUES ('201812210000900', '2', '2', '4', '3', '12', '2018-12-21 16:30:06');
-INSERT INTO `order_info` VALUES ('20181221001000', '2', '1', '10', '1', '10', '2018-12-21 16:38:29');
-INSERT INTO `order_info` VALUES ('20181221001100', '2', '1', '10', '7', '70', '2018-12-21 16:39:00');
-INSERT INTO `order_info` VALUES ('20181221001200', '2', '3', '25', '14', '350', '2018-12-21 16:39:13');
+INSERT INTO `order_info` VALUES ('201812210000000', '2', '3', '25.00', '1', '25.00', '2018-12-21 16:01:57');
+INSERT INTO `order_info` VALUES ('201812210000100', '2', '3', '25.00', '1', '25.00', '2018-12-21 16:05:58');
+INSERT INTO `order_info` VALUES ('201812210000200', '2', '3', '25.00', '1', '25.00', '2018-12-21 16:08:42');
+INSERT INTO `order_info` VALUES ('201812210000300', '2', '1', '10.00', '1', '10.00', '2018-12-21 16:09:52');
+INSERT INTO `order_info` VALUES ('201812210000400', '2', '2', '4.00', '1', '4.00', '2018-12-21 16:09:57');
+INSERT INTO `order_info` VALUES ('201812210000500', '2', '3', '25.00', '1', '25.00', '2018-12-21 16:10:44');
+INSERT INTO `order_info` VALUES ('201812210000600', '2', '2', '4.00', '1', '4.00', '2018-12-21 16:18:40');
+INSERT INTO `order_info` VALUES ('201812210000700', '2', '2', '4.00', '4', '16.00', '2018-12-21 16:18:59');
+INSERT INTO `order_info` VALUES ('201812210000800', '2', '2', '4.00', '3', '12.00', '2018-12-21 16:29:58');
+INSERT INTO `order_info` VALUES ('201812210000900', '2', '2', '4.00', '3', '12.00', '2018-12-21 16:30:06');
+INSERT INTO `order_info` VALUES ('20181221001000', '2', '1', '10.00', '1', '10.00', '2018-12-21 16:38:29');
+INSERT INTO `order_info` VALUES ('20181221001100', '2', '1', '10.00', '7', '70.00', '2018-12-21 16:39:00');
+INSERT INTO `order_info` VALUES ('20181221001200', '2', '3', '25.00', '14', '350.00', '2018-12-21 16:39:13');
+
+-- ----------------------------
+-- Table structure for promo
+-- ----------------------------
+DROP TABLE IF EXISTS `promo`;
+CREATE TABLE `promo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `promo_name` varchar(64) NOT NULL DEFAULT '' COMMENT '秒杀名称',
+  `promo_item_price` decimal(10,2) NOT NULL COMMENT '商品秒杀价格',
+  `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '秒杀商品',
+  `start_data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '秒杀开始时间',
+  `end_data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '秒杀结束时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品秒杀表';
+
+-- ----------------------------
+-- Records of promo
+-- ----------------------------
+INSERT INTO `promo` VALUES ('1', '秒杀秒杀', '9.90', '2', '2018-12-21 17:52:47', '2018-12-22 17:53:00');
 
 -- ----------------------------
 -- Table structure for sequence_info

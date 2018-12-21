@@ -5,10 +5,14 @@ import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.dao.ItemMapper;
 import com.yi.seckill.dao.ItemStockMapper;
+import com.yi.seckill.dao.PromoMapper;
 import com.yi.seckill.dto.Item;
+import com.yi.seckill.dto.Promo;
 import com.yi.seckill.model.ItemModel;
 import com.yi.seckill.dto.ItemStock;
+import com.yi.seckill.model.PromoModel;
 import com.yi.seckill.service.ItemService;
+import com.yi.seckill.service.PromoService;
 import com.yi.seckill.validator.ValidationResult;
 import com.yi.seckill.validator.ValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,8 @@ public class ItemServiceImpl implements ItemService {
     ItemMapper itemMapper;
     @Autowired
     ItemStockMapper itemStockMapper;
+    @Autowired
+    PromoService promoService;
 
     @Transactional(rollbackFor = BusinessException.class)
     @Override
@@ -61,7 +67,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemModel selectByPrimaryAllId(Integer id) {
-        return itemMapper.selectByPrimaryAllId(id);
+        ItemModel itemModel = itemMapper.selectByPrimaryAllId(id);
+        PromoModel promoModel = promoService.getPromoByItemId(id);
+
+        // 判断是否有秒杀活动
+        if (promoModel != null && promoModel.getStatus() != -1){
+            itemModel.setPromoModel(promoModel);
+        }
+
+        return itemModel;
     }
 
     @Override
@@ -78,7 +92,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional(rollbackFor = BusinessException.class)
     public Item selectById(Integer id) {
         return itemMapper.selectByPrimaryId(id);
     }

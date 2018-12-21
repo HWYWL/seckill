@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-21 16:47:29
+Date: 2018-12-21 18:13:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
   `title` varchar(64) NOT NULL DEFAULT '' COMMENT 'title',
-  `price` decimal(10,0) NOT NULL COMMENT '商品价格',
+  `price` decimal(10,2) NOT NULL COMMENT '商品价格',
   `description` varchar(500) NOT NULL DEFAULT '' COMMENT '商品描述',
   `sales` int(11) NOT NULL DEFAULT '0' COMMENT '商品销量',
   `img_url` varchar(255) NOT NULL DEFAULT '' COMMENT '商品描述图片URL',
@@ -49,12 +49,26 @@ CREATE TABLE `order_info` (
   `id` varchar(32) NOT NULL COMMENT '订单ID',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
-  `item_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '当时商品价格',
+  `item_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '当时商品价格',
   `amount` int(11) NOT NULL DEFAULT '0' COMMENT '购买商品的数量',
-  `order_price` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '购买金额',
+  `order_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '购买金额',
   `crt_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
+
+-- ----------------------------
+-- Table structure for promo
+-- ----------------------------
+DROP TABLE IF EXISTS `promo`;
+CREATE TABLE `promo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `promo_name` varchar(64) NOT NULL DEFAULT '' COMMENT '秒杀名称',
+  `promo_item_price` decimal(10,2) NOT NULL COMMENT '商品秒杀价格',
+  `item_id` int(11) NOT NULL DEFAULT '0' COMMENT '秒杀商品',
+  `start_data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '秒杀开始时间',
+  `end_data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '秒杀结束时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品秒杀表';
 
 -- ----------------------------
 -- Table structure for sequence_info

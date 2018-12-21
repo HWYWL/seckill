@@ -53,6 +53,11 @@ public class ItemModel implements Serializable {
     @NotNull(message = "商品描述图片信息不能不填")
     private String imgUrl;
 
+    /**
+     * 使用聚合模型，如果PromoModel不为空，表示还有秒杀活动
+     */
+    private PromoModel promoModel;
+
     public ItemModel() {
         super();
     }
@@ -130,6 +135,14 @@ public class ItemModel implements Serializable {
         this.imgUrl = imgUrl;
     }
 
+    public PromoModel getPromoModel() {
+        return promoModel;
+    }
+
+    public void setPromoModel(PromoModel promoModel) {
+        this.promoModel = promoModel;
+    }
+
     @Override
     public String toString() {
         return "ItemModel{" +
@@ -140,6 +153,7 @@ public class ItemModel implements Serializable {
                 ", description='" + description + '\'' +
                 ", sales=" + sales +
                 ", imgUrl='" + imgUrl + '\'' +
+                ", promoModel=" + promoModel +
                 '}';
     }
 }

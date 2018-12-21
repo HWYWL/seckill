@@ -1,6 +1,5 @@
 package com.yi.seckill.dto;
 
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;

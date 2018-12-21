@@ -19,7 +19,7 @@ public interface PromoMapper extends Mapper<Promo> {
     Promo selectByPrimaryId(Integer id);
 
     /**
-     * 根据itemId获取秒杀活动
+     * 获取秒杀信息
      * @param itemId 商品id
      * @return
      */
