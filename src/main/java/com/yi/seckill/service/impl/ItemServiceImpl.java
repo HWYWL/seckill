@@ -5,16 +5,15 @@ import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.dao.ItemMapper;
 import com.yi.seckill.dao.ItemStockMapper;
-import com.yi.seckill.model.Item;
+import com.yi.seckill.dto.Item;
 import com.yi.seckill.model.ItemModel;
-import com.yi.seckill.model.ItemStock;
+import com.yi.seckill.dto.ItemStock;
 import com.yi.seckill.service.ItemService;
 import com.yi.seckill.validator.ValidationResult;
 import com.yi.seckill.validator.ValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 

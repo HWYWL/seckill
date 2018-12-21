@@ -1,6 +1,6 @@
 package com.yi.seckill.dao;
 
-import com.yi.seckill.model.UserInfo;
+import com.yi.seckill.dto.UserInfo;
 import com.yi.seckill.model.UserModel;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;

@@ -8,6 +8,8 @@ import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.dao.ItemStockMapper;
 import com.yi.seckill.dao.OrderInfoMapper;
 import com.yi.seckill.dao.SequenceInfoMapper;
+import com.yi.seckill.dto.OrderInfo;
+import com.yi.seckill.dto.SequenceInfo;
 import com.yi.seckill.model.*;
 import com.yi.seckill.service.ItemService;
 import com.yi.seckill.service.OrderService;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.util.Date;

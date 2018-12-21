@@ -1,6 +1,6 @@
 package com.yi.seckill.dao;
 
-import com.yi.seckill.model.ItemStock;
+import com.yi.seckill.dto.ItemStock;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

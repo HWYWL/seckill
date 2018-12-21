@@ -1,4 +1,4 @@
-package com.yi.seckill.model;
+package com.yi.seckill.dto;
 
 import java.io.Serializable;
 

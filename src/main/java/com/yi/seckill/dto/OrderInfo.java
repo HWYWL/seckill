@@ -1,4 +1,4 @@
-package com.yi.seckill.model;
+package com.yi.seckill.dto;
 
 
 import javax.persistence.GeneratedValue;
@@ -13,7 +13,7 @@ import java.util.Date;
  * @author YI
  * @date 2018-12-20 18:00:15
  */
-public class OrderInfo  implements Serializable {
+public class OrderInfo implements Serializable {
 
   /**
    * 订单号

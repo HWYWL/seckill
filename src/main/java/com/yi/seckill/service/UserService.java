@@ -2,7 +2,7 @@ package com.yi.seckill.service;
 
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.CommonService;
-import com.yi.seckill.model.UserInfo;
+import com.yi.seckill.dto.UserInfo;
 import com.yi.seckill.model.UserModel;
 
 import javax.servlet.http.HttpServletRequest;

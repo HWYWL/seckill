@@ -2,7 +2,7 @@ package com.yi.seckill.service;
 
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.CommonService;
-import com.yi.seckill.model.Item;
+import com.yi.seckill.dto.Item;
 import com.yi.seckill.model.ItemModel;
 
 import java.util.List;

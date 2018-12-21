@@ -3,7 +3,7 @@ package com.yi.seckill.controller;
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.model.ItemModel;
-import com.yi.seckill.model.UserInfo;
+import com.yi.seckill.dto.UserInfo;
 import com.yi.seckill.service.ItemService;
 import com.yi.seckill.service.OrderService;
 import com.yi.seckill.utils.MessageResult;

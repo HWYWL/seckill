@@ -2,14 +2,12 @@ package com.yi.seckill.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
 import com.yi.seckill.common.BusinessException;
 import com.yi.seckill.common.EmBusinessError;
 import com.yi.seckill.common.EmLoginType;
-import com.yi.seckill.model.UserInfo;
+import com.yi.seckill.dto.UserInfo;
 import com.yi.seckill.model.UserModel;
 import com.yi.seckill.service.UserService;
 import com.yi.seckill.utils.MessageResult;

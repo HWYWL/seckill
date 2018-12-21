@@ -1,6 +1,6 @@
 package com.yi.seckill.dao;
 
-import com.yi.seckill.model.OrderInfo;
+import com.yi.seckill.dto.OrderInfo;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
