@@ -10,6 +10,7 @@ import com.yi.seckill.service.PromoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Date;
  */
 @Service
 public class PromoServiceImpl implements PromoService {
-    @Autowired
+    @Resource
     PromoMapper promoMapper;
 
     @Override
@@ -33,11 +34,11 @@ public class PromoServiceImpl implements PromoService {
             return null;
         }
 
-        // 判断秒杀状态
+        // 秒杀活动状态，-1：已经结束、0:未开始、1:进行中
         DateTime date = DateUtil.date(new Date());
-        if (DateUtil.date(promoModel.getStartData()).isAfter(date)){
+        if (DateUtil.date(promoModel.getStartData()).isBefore(date)){
             promoModel.setStatus(0);
-        }else if (DateUtil.date(promoModel.getStartData()).isBefore(date)){
+        }else if (DateUtil.date(promoModel.getEndData()).isAfter(date)){
             promoModel.setStatus(-1);
         }else {
             promoModel.setStatus(1);

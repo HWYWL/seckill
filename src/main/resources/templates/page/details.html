@@ -38,8 +38,10 @@
             <div class="itemInfo-wrap">
                 <div class="itemInfo">
                     <form class="layui-form" action="">
+
                         <div class="title" id="title"></div>
                         <div class="summary" id="summary"></div>
+
                         <div class="choose-attrs">
                             <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
                                 <div class="number-cont"><span class="cut btn">-</span><input
@@ -60,11 +62,15 @@
                             <div class="layui-input-block" id="itemId"></div>
                         </div>
 
-
-                        <div class="choose-btns">
-                            <button class="layui-btn layui-btn-primary purchase-btn" lay-submit lay-filter="buy">立刻购买
-                            </button>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input" id="promoDate" value="2019-01-01 00:00:00">
                         </div>
+                        <blockquote class="layui-elem-quote" style="margin-top: 10px;">
+                            <div id="test2"></div>
+                        </blockquote>
+
+
+                        <div class="choose-btns" id="buyButton"></div>
                     </form>
                 </div>
             </div>
@@ -94,5 +100,6 @@
     });
 </script>
 <script src="/js/index.js"></script>
+<script src="/js/details.js.js"></script>
 </body>
 </html>

@@ -51,14 +51,36 @@ function initTable() {
                                 var title = layer.getChildFrame("#title");
                                 var summary = layer.getChildFrame("#summary");
                                 var itemId = layer.getChildFrame("#itemId");
+                                var buyButton = layer.getChildFrame("#buyButton");
+                                var buyButton = layer.getChildFrame("#buyButton");
+                                var promoDate = layer.getChildFrame("#promoDate");
 
                                 title.append("<h4>" + result.data.description + "</h4>");
-                                summary.append(
-                                    "              <p class='activity'><span>活动价</span><strong class='price'><i>￥</i>" + result.data.price + "</strong></p>\n" +
-                                    "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>"+
-                                    "              <p class='activity'><span>销量</span><strong class='item'><i></i>" + result.data.sales + "</strong></p>");
 
-                                itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='"+data.id+"'>");
+                                if (result.data.promoModel == null || result.data.promoModel.status == -1) {
+                                    summary.append(
+                                        "              <p class='activity'><span>活动价</span><strong class='price'><i>￥</i>" + result.data.price + "</strong></p>\n" +
+                                        "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>" +
+                                        "              <p class='activity'><span>销量</span><strong class='item'><i></i>" + result.data.sales + "</strong></p>");
+
+                                    itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
+                                    buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻购买</button>");
+
+                                }else {
+                                    summary.append("<div class=\"summary\">\n" +
+                                        "              <p class=\"reference\"><span>参考价</span> <del>￥" + result.data.price + "</del></p>\n" +
+                                        "              <p class=\"activity\"><span>活动价</span><strong class=\"price\"><i>￥</i>" + result.data.promoModel.promoItemPrice + "</strong></p>\n" +
+                                        "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>" +
+                                        "            </div>\n");
+                                    itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
+                                    buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻秒杀</button>");
+
+                                    if (result.data.promoModel.status == 0){
+                                        promoDate.value = result.data.promoModel.startData;
+                                    } else {
+                                        promoDate.value = result.data.promoModel.endData;
+                                    }
+                                }
                             }
 
                             form.render();
@@ -116,41 +138,6 @@ function initTable() {
             });
         });
 
-        return false;
-    });
-
-    // 购买商品
-    form.on('submit(buy)', function (data) {
-        var item = data.field;
-        layer.confirm('确定购买?', {icon: 3, title: '购买'}, function (index) {
-            $.ajax({
-                type: "post",
-                url: "/item/buy",
-                data: item,
-                async: false,
-                success: function (result) {
-                    if (result.code == 0) {
-                        layer.load(1, {time: 1000});
-                        setTimeout(function () {
-                            layer.msg(result.msg, {icon: 1});
-                        }, 1000);
-                    } else {
-                        layer.load(1, {time: 1000});
-                        setTimeout(function () {
-                            layer.msg(result.data.errMsg, {icon: 5});
-                        }, 1000);
-                        setTimeout(function () {
-                            // 用户未登录
-                            if (result.data.errCode == 20004){
-                                window.parent.location.replace("/login");
-                            }
-                        }, 2000);
-                    }
-                }
-            });
-        });
-
-        //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         return false;
     });
 }
