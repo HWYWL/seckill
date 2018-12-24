@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/css/countDown.css">
     <link rel="stylesheet" href="/lib/layui/css/layui.css" media="all">
     <script src="/lib/layui/layui.js" charset="utf-8"></script>
     <meta name="viewport"
@@ -62,12 +63,9 @@
                             <div class="layui-input-block" id="itemId"></div>
                         </div>
 
-                        <div class="layui-inline">
-                            <input type="text" class="layui-input" id="promoDate" value="2019-01-01 00:00:00">
-                        </div>
-                        <blockquote class="layui-elem-quote" style="margin-top: 10px;">
-                            <div id="test2"></div>
-                        </blockquote>
+                        <br>
+                        <!--活动倒计时-->
+                        <div id="countDown" ></div>
 
 
                         <div class="choose-btns" id="buyButton"></div>
@@ -78,28 +76,9 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    layui.config({
-        base: '/js/util/'
-    }).use(['mm', 'jquery'], function () {
-        var mm = layui.mm, $ = layui.$;
-        var cur = $('.number-cont input').val();
-        $('.number-cont .btn').on('click', function () {
-            if ($(this).hasClass('add')) {
-                cur++;
-
-            } else {
-                if (cur > 1) {
-                    cur--;
-                }
-            }
-            $('.number-cont input').val(cur);
-            $('#quantity input').val(cur);
-        })
-
-    });
-</script>
+<script src="/js/jquery.js"></script>
 <script src="/js/index.js"></script>
-<script src="/js/details.js.js"></script>
+<script src="/js/countDown.js"></script>
+<script src="/js/details.js"></script>
 </body>
 </html>

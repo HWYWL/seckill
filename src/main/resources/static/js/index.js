@@ -31,6 +31,7 @@ function initTable() {
 
         if (obj.event === 'detail') {
             layer.open({
+                id: 'insert-form',
                 type: 2,
                 title: 'ID：' + data.id + ' 的订单详情',
                 shadeClose: true,
@@ -52,8 +53,7 @@ function initTable() {
                                 var summary = layer.getChildFrame("#summary");
                                 var itemId = layer.getChildFrame("#itemId");
                                 var buyButton = layer.getChildFrame("#buyButton");
-                                var buyButton = layer.getChildFrame("#buyButton");
-                                var promoDate = layer.getChildFrame("#promoDate");
+                                var countDown = layer.getChildFrame("#countDown");
 
                                 title.append("<h4>" + result.data.description + "</h4>");
 
@@ -66,7 +66,7 @@ function initTable() {
                                     itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
                                     buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻购买</button>");
 
-                                }else {
+                                } else {
                                     summary.append("<div class=\"summary\">\n" +
                                         "              <p class=\"reference\"><span>参考价</span> <del>￥" + result.data.price + "</del></p>\n" +
                                         "              <p class=\"activity\"><span>活动价</span><strong class=\"price\"><i>￥</i>" + result.data.promoModel.promoItemPrice + "</strong></p>\n" +
@@ -75,15 +75,21 @@ function initTable() {
                                     itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
                                     buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻秒杀</button>");
 
-                                    if (result.data.promoModel.status == 0){
-                                        promoDate.value = result.data.promoModel.startData;
-                                    } else {
-                                        promoDate.value = result.data.promoModel.endData;
+                                    if (result.data.promoModel != null && result.data.promoModel.status == 0){
+                                        countDown.append("<p><input name='countDown' type=\"hidden\" data-prefix='距离活动开始还有' " +
+                                            "value='"+ dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.startData) +"'> <span></span></p>");
+                                    } else if (result.data.promoModel != null && result.data.promoModel.status == 1) {
+                                        countDown.append("<p><input name='countDown' type=\"hidden\" data-prefix='距离活动结束还有' " +
+                                            "value='"+ dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.endData) +"'> <span></span></p>");
                                     }
                                 }
                             }
 
                             form.render();
+
+                            // 调用子页面方法，秒杀开始倒计时
+                            var frameId=document.getElementById('insert-form').getElementsByTagName("iframe")[0].id;
+                            $('#'+frameId)[0].contentWindow.count();
                         }
                     });
                 }
@@ -140,4 +146,24 @@ function initTable() {
 
         return false;
     });
+}
+
+function dateFtt(fmt, dateStr) {
+    //author: meizz
+    var date = new Date(dateStr);
+    var o = {
+        "M+": date.getMonth() + 1,                 //月份
+        "d+": date.getDate(),                    //日
+        "h+": date.getHours(),                   //小时
+        "m+": date.getMinutes(),                 //分
+        "s+": date.getSeconds(),                 //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        "S": date.getMilliseconds()             //毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
 }

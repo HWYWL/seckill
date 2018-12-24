@@ -1,42 +1,19 @@
 layui.use(['util', 'laydate', 'layer', 'table', 'form'], function(){
-    var util = layui.util
-        ,laydate = layui.laydate
-        ,layer = layui.layer;
-    //固定块
-    util.fixbar({
-        bar1: true
-        ,bar2: true
-        ,css: {right: 50, bottom: 100}
-        ,bgcolor: '#393D49'
-        ,click: function(type){
-            if(type === 'bar1'){
-                layer.msg('icon是可以随便换的')
-            } else if(type === 'bar2') {
-                layer.msg('两个bar都可以设定是否开启')
+    var table = layui.table, form = layui.form, layer = layui.layer;
+
+    var mm = layui.mm, $ = layui.$;
+    var cur = $('.number-cont input').val();
+    $('.number-cont .btn').on('click', function () {
+        if ($(this).hasClass('add')) {
+            cur++;
+
+        } else {
+            if (cur > 1) {
+                cur--;
             }
         }
-    });
-
-    //倒计时
-    var thisTimer, setCountdown = function(y, M, d, H, m, s){
-        var endTime = new Date(y, M||0, d||1, H||0, m||0, s||0) //结束日期
-            ,serverTime = new Date(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
-
-        clearTimeout(thisTimer);
-        util.countdown(endTime, serverTime, function(date, serverTime, timer){
-            var str = date[0] + '天' + date[1] + '时' +  date[2] + '分' + date[3] + '秒';
-            lay('#test2').html(str);
-            thisTimer = timer;
-        });
-    };
-    setCountdown(2099,1,1);
-
-    laydate.render({
-        elem: '#test1'
-        ,type: 'datetime'
-        ,done: function(value, date){
-            setCountdown(date.year, date.month - 1, date.date, date.hours, date.minutes, date.seconds);
-        }
+        $('.number-cont input').val(cur);
+        $('#quantity input').val(cur);
     });
 
     // 购买商品
@@ -74,3 +51,21 @@ layui.use(['util', 'laydate', 'layer', 'table', 'form'], function(){
         return false;
     });
 });
+
+function count() {
+    $("input[name='countDown']").each(function () {
+        var time_end=this.value;
+        var con=$(this).next("span");
+        var _=this.dataset;
+        countDown(con,{
+            title:_.title,//优先级最高,填充在prefix位置
+            prefix:_.prefix,//前缀部分
+            suffix:_.suffix,//后缀部分
+            time_end:time_end//要到达的时间
+        })
+        //提供3个事件分别为:启动,重启,停止
+            .on("countDownStarted countDownRestarted  countDownEnded ",function (arguments) {
+                console.info(arguments);
+            });
+    });
+}

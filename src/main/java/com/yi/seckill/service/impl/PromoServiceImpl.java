@@ -7,7 +7,6 @@ import com.yi.seckill.dao.PromoMapper;
 import com.yi.seckill.dto.Promo;
 import com.yi.seckill.model.PromoModel;
 import com.yi.seckill.service.PromoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,7 +20,7 @@ import java.util.Date;
 @Service
 public class PromoServiceImpl implements PromoService {
     @Resource
-    PromoMapper promoMapper;
+    private PromoMapper promoMapper;
 
     @Override
     public PromoModel getPromoByItemId(Integer itemId) {
@@ -35,10 +34,10 @@ public class PromoServiceImpl implements PromoService {
         }
 
         // 秒杀活动状态，-1：已经结束、0:未开始、1:进行中
-        DateTime date = DateUtil.date(new Date());
-        if (DateUtil.date(promoModel.getStartData()).isBefore(date)){
+        Date date = new Date();
+        if (DateUtil.date(date).isBefore(promoModel.getStartData())){
             promoModel.setStatus(0);
-        }else if (DateUtil.date(promoModel.getEndData()).isAfter(date)){
+        }else if (DateUtil.date(date).isAfter(promoModel.getEndData())){
             promoModel.setStatus(-1);
         }else {
             promoModel.setStatus(1);
