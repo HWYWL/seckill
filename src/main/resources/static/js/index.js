@@ -54,6 +54,7 @@ function initTable() {
                                 var itemId = layer.getChildFrame("#itemId");
                                 var buyButton = layer.getChildFrame("#buyButton");
                                 var countDown = layer.getChildFrame("#countDown");
+                                var promoId = layer.getChildFrame("#promoId");
 
                                 title.append("<h4>" + result.data.description + "</h4>");
 
@@ -73,14 +74,23 @@ function initTable() {
                                         "              <p class='activity'><span>剩余库存</span><strong class='item'><i></i>" + result.data.stock + "</strong></p>" +
                                         "            </div>\n");
                                     itemId.append("<input type='text' name='itemId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
-                                    buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻秒杀</button>");
 
                                     if (result.data.promoModel != null && result.data.promoModel.status == 0){
+                                        var startData = dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.startData);
                                         countDown.append("<p><input name='countDown' type=\"hidden\" data-prefix='距离活动开始还有' " +
-                                            "value='"+ dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.startData) +"'> <span></span></p>");
+                                            "value='"+ startData +"'> <span></span></p>");
+
+                                        promoId.append("<input type='text' name='promoId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
+                                        // 按键不可按下
+                                        buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻秒杀</button>");
                                     } else if (result.data.promoModel != null && result.data.promoModel.status == 1) {
+                                        var endData = dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.endData);
                                         countDown.append("<p><input name='countDown' type=\"hidden\" data-prefix='距离活动结束还有' " +
-                                            "value='"+ dateFtt("yyyy-MM-dd hh:mm:ss", result.data.promoModel.endData) +"'> <span></span></p>");
+                                            "value='"+ endData +"'> <span></span></p>");
+
+                                        promoId.append("<input type='text' name='promoId' autocomplete='off' class='layui-input' value='" + data.id + "'>");
+                                        // 按键可以使用
+                                        buyButton.append("<button class=\"layui-btn layui-btn-primary purchase-btn\" lay-submit lay-filter=\"buy\">立刻秒杀</button>");
                                     }
                                 }
                             }

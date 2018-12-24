@@ -16,7 +16,10 @@ public enum EmBusinessError implements CommonError {
 
     OTP_CODE_NOT_EXIST(30001, "验证码不匹配"),
     ITEM_NOT_EXIST(40001, "商品不存在"),
-    STOCK_OF_ITEM_IS_SHORT(40002, "商品库存不足");
+    STOCK_OF_ITEM_IS_SHORT(40002, "商品库存不足"),
+    SECKILL_ACTIVITY_HAS_ENDED(40003, "秒杀活动还已结束"),
+    SECKILL_HAS_NOT_STARTED_YET(40004, "秒杀活动还未开始"),
+    NO_SECKILL_ACTIVITY(40005, "没有活动信息"),;
 
     private int errCode;
     private String errMsg;

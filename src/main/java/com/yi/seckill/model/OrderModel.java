@@ -24,6 +24,11 @@ public class OrderModel {
     private Integer itemId;
 
     /**
+     * 秒杀商品id，费控表示以秒杀商品方式下单
+     */
+    private Integer promoId;
+
+    /**
      * 购买商品的数量
      */
     private Integer amount;
@@ -50,10 +55,29 @@ public class OrderModel {
         this.orderPrice = orderPrice;
     }
 
+    public OrderModel(Integer userId, Integer itemId, Integer promoId, Integer amount, BigDecimal itemPrice, BigDecimal orderPrice) {
+        this.userId = userId;
+        this.itemId = itemId;
+        this.promoId = promoId;
+        this.amount = amount;
+        this.itemPrice = itemPrice;
+        this.orderPrice = orderPrice;
+    }
+
     public OrderModel(String id, Integer userId, Integer itemId, Integer amount, BigDecimal itemPrice, BigDecimal orderPrice) {
         this.id = id;
         this.userId = userId;
         this.itemId = itemId;
+        this.amount = amount;
+        this.itemPrice = itemPrice;
+        this.orderPrice = orderPrice;
+    }
+
+    public OrderModel(String id, Integer userId, Integer itemId, Integer promoId, Integer amount, BigDecimal itemPrice, BigDecimal orderPrice) {
+        this.id = id;
+        this.userId = userId;
+        this.itemId = itemId;
+        this.promoId = promoId;
         this.amount = amount;
         this.itemPrice = itemPrice;
         this.orderPrice = orderPrice;
@@ -105,5 +129,13 @@ public class OrderModel {
 
     public void setOrderPrice(BigDecimal orderPrice) {
         this.orderPrice = orderPrice;
+    }
+
+    public Integer getPromoId() {
+        return promoId;
+    }
+
+    public void setPromoId(Integer promoId) {
+        this.promoId = promoId;
     }
 }

@@ -52,6 +52,7 @@ layui.use(['util', 'laydate', 'layer', 'table', 'form'], function(){
     });
 });
 
+// 倒计时
 function count() {
     $("input[name='countDown']").each(function () {
         var time_end=this.value;

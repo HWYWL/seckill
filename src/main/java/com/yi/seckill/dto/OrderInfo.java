@@ -48,6 +48,11 @@ public class OrderInfo implements Serializable {
   private BigDecimal orderPrice;
 
   /**
+   * 秒杀商品id
+   */
+  private Integer promoId;
+
+  /**
    * 订单创建时间
    */
   private Date crtTime;
@@ -107,5 +112,13 @@ public class OrderInfo implements Serializable {
 
   public void setCrtTime(Date crtTime) {
     this.crtTime = crtTime;
+  }
+
+  public Integer getPromoId() {
+    return promoId;
+  }
+
+  public void setPromoId(Integer promoId) {
+    this.promoId = promoId;
   }
 }

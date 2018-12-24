@@ -17,5 +17,5 @@ public interface OrderService extends CommonService {
      * @param amount    购买的商品数量
      * @return
      */
-    OrderModel createOrder(Integer userId, Integer itemId, Integer amount) throws BusinessException;
+    OrderModel createOrder(Integer userId, Integer itemId, Integer amount, Integer promoId) throws BusinessException;
 }

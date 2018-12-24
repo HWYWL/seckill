@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50720
 File Encoding         : 65001
 
-Date: 2018-12-21 18:13:08
+Date: 2018-12-24 17:28:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -52,6 +52,7 @@ CREATE TABLE `order_info` (
   `item_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '当时商品价格',
   `amount` int(11) NOT NULL DEFAULT '0' COMMENT '购买商品的数量',
   `order_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '购买金额',
+  `promo_id` int(11) NOT NULL DEFAULT '0' COMMENT '秒杀商品id，默认为0表示不是秒杀商品',
   `crt_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';

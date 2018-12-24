@@ -84,6 +84,7 @@ public class ItemController extends BaseController{
      */
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
     public MessageResult buy(@RequestParam(name = "itemId")Integer itemId,
+                             @RequestParam(name = "promoId", defaultValue = "0")Integer promoId,
                              @RequestParam(name = "amount")Integer amount) throws BusinessException {
         MessageResult result = MessageResult.ok();
         Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("IS_LOGIN");
@@ -93,7 +94,7 @@ public class ItemController extends BaseController{
 
         UserInfo userInfo = (UserInfo) httpServletRequest.getSession().getAttribute("LOGIN_USER");
 
-        orderService.createOrder(userInfo.getId(), itemId, amount);
+        orderService.createOrder(userInfo.getId(), itemId, amount, promoId);
 
         result.setMsg("商品购买成功");
 

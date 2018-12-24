@@ -13,6 +13,7 @@ import com.yi.seckill.dto.SequenceInfo;
 import com.yi.seckill.model.*;
 import com.yi.seckill.service.ItemService;
 import com.yi.seckill.service.OrderService;
+import com.yi.seckill.service.PromoService;
 import com.yi.seckill.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,12 @@ public class OrderServiceImpl implements OrderService {
     ItemStockMapper itemStockMapper;
     @Autowired
     SequenceInfoMapper sequenceInfoMapper;
+    @Autowired
+    PromoService promoService;
 
     @Override
     @Transactional(rollbackFor = BusinessException.class)
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer amount, Integer promoId) throws BusinessException {
         // 校验下单状态，下单商品是否存在，用户是否合法，购买数量是否正确
         ItemModel itemModel = itemService.selectByPrimaryAllId(itemId);
         if (itemModel == null){
@@ -65,6 +68,31 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
         }
 
+        // 校验活动信息
+        if (promoId == null){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+
+        }
+
+        OrderModel orderModel = null;
+        if (promoId != 0){
+            PromoModel promoModel = promoService.getPromoByItemId(promoId);
+            if (promoModel == null){
+                throw new BusinessException(EmBusinessError.NO_SECKILL_ACTIVITY);
+            }else {
+                // 秒杀活动状态，-1：已经结束、0:未开始、1:进行中
+                if (promoModel.getStatus() == -1){
+                    throw new BusinessException(EmBusinessError.SECKILL_ACTIVITY_HAS_ENDED);
+                }else if (promoModel.getStatus() == 0){
+                    throw new BusinessException(EmBusinessError.SECKILL_HAS_NOT_STARTED_YET);
+                }else {
+                    // 设置秒杀价格
+                    new OrderModel(userId, itemId, amount, promoModel.getPromoItemPrice(), promoModel.getPromoItemPrice().multiply(new BigDecimal(amount)));
+                }
+            }
+
+        }
+
         // 落单减库存
         boolean decreaseStock = itemService.decreaseStock(itemId, amount);
         if (!decreaseStock){
@@ -73,7 +101,11 @@ public class OrderServiceImpl implements OrderService {
 
         // 订单入库
         OrderInfo orderInfo = new OrderInfo();
-        OrderModel orderModel = new OrderModel(userId, itemId, amount, itemModel.getPrice(), itemModel.getPrice().multiply(new BigDecimal(amount)));
+        // 商品生产价格
+        if (orderModel == null){
+            orderModel = new OrderModel(userId, itemId, amount, itemModel.getPrice(), itemModel.getPrice().multiply(new BigDecimal(amount)));
+        }
+
         BeanUtil.copyProperties(orderModel, orderInfo);
 
         orderInfo.setId(generateOrderNo());
